@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "657295345078",
+    "firebase_url": "https://prep--perfection-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "prep--perfection",
+    "storage_bucket": "prep--perfection.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:657295345078:android:ccae28cf14049e455ead17",
+        "android_client_info": {
+          "package_name": "com.papb.prepperfection"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "657295345078-taffcjaolr690t41t7mbvk3d8mbqcpoo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKB7ODv5z0xu0X3ASSImzDl6pvHCgS6XY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "657295345078-taffcjaolr690t41t7mbvk3d8mbqcpoo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
