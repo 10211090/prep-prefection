@@ -4,6 +4,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/dashboardRetail"
+    android:background="#ECECEC"
     tools:context=".DashboardRetail">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topBarRetail"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/shape_dashboard"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp">
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/btmBarRetail"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginBottom="4dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="-1dp"
+        tools:ignore="MissingConstraints">
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/shapeableImageView"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginBottom="55dp"
+        android:background="@drawable/shape_add_btn"
+        app:layout_constraintBottom_toBottomOf="@+id/btmBarRetail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/btmBarRetail" />
+
+    <Button
+        android:layout_width="60dp"
+        android:layout_height="67dp"
+        app:layout_constraintBottom_toBottomOf="@+id/btmBarRetail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:backgroundTint="#ECB255"
+        android:layout_marginBottom="60dp"
+        android:text="+"
+        android:textSize="25sp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
