@@ -46,6 +46,121 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/shapeMainProfileSetting"
+        android:layout_width="350dp"
+        android:layout_height="600dp"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/rectangle_menu"
+        android:backgroundTint="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/btmBarRetail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topBarRetail">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/shapeProfileSetting"
+            android:layout_width="350dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="-300dp"
+            android:background="@drawable/rectangle_menu"
+            app:layout_constraintBottom_toTopOf="@+id/btmBarRetail"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/topBarRetail"
+            tools:ignore="NotSibling">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imgProfileSettingMenu"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="-60dp"
+                android:src="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/Circular" />
+
+            <TextView
+                android:id="@+id/nameProfileSetting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="45dp"
+                android:text="Nama Account"
+                android:fontFamily="sans-serif"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/emailProfileSetting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:text="Email Account"
+                android:fontFamily="sans-serif"
+                android:textColor="#e1e2e3"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TableLayout
+            android:layout_width="300dp"
+            android:layout_height="330dp"
+            android:layout_marginTop="20dp"
+            android:stretchColumns="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/shapeProfileSetting">
+
+            <TableRow>
+                <TextView
+                    android:layout_column="1"
+                    android:padding="3dp"
+                    android:text="Tentang kami"
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
+            </TableRow>
+
+            <View
+                android:layout_height="1dip"
+                android:background="#FF909090" />
+
+            <TableRow android:layout_marginTop="20dp">
+                <TextView
+                    android:layout_column="1"
+                    android:padding="3dp"
+                    android:text="Term and condition"
+                    android:textStyle="italic"
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
+            </TableRow>
+            <View
+                android:layout_height="1dip"
+                android:background="#FF909090" />
+
+            <TableRow android:layout_marginTop="200dp">
+
+                <Button
+                    android:id="@+id/btnLogout"
+                    android:layout_column="1"
+                    android:backgroundTint="#f5655b"
+                    android:padding="3dp"
+                    android:text="Logout"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </TableRow>
+        </TableLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/btmBarRetail"
         android:layout_width="match_parent"
         android:layout_height="65dp"
@@ -109,14 +224,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/btmBarRetail" />
 
-    <TextView
-        android:id="@+id/textViewSetting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="This is Setting"
-        app:layout_constraintBottom_toTopOf="@+id/btmBarRetail"
+    <Button
+        android:layout_width="60dp"
+        android:layout_height="67dp"
+        app:layout_constraintBottom_toBottomOf="@+id/btmBarRetail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:backgroundTint="#ECB255"
+        android:layout_marginBottom="35dp"
+        android:textSize="25sp"/>
+
+
+    <ImageView
+        android:id="@+id/icon_cart"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/icon_cart"
+        android:layout_marginBottom="55dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tint="@color/white"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
