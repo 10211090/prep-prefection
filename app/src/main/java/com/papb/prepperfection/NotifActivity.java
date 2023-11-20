@@ -60,19 +60,19 @@ public class NotifActivity extends AppCompatActivity implements PopupMenu.OnMenu
         DashboardActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(NotifActivity.this, DashboardRetail.class));
+                startActivity(new Intent(NotifActivity.this, DashboardRetail.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
         historyActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(NotifActivity.this, HistoryActivity.class));
+                startActivity(new Intent(NotifActivity.this, HistoryActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
         settingActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(NotifActivity.this, SettingActivity.class));
+                startActivity(new Intent(NotifActivity.this, SettingActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
 

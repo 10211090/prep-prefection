@@ -127,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
                             editor.putString(KEY_PROFILE, user.getPhotoUrl().toString());
                             editor.apply();
 
-                            Intent intent = new Intent(LoginActivity.this, DashboardRetail.class);
+                            Intent intent = new Intent(LoginActivity.this, DashboardRetail.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                             startActivity(intent);
                         }
                         else {

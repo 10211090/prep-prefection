@@ -22,9 +22,6 @@
             android:name=".NotifActivity"
             android:exported="false" />
         <activity
-            android:name=".HistoryAcitivy"
-            android:exported="false" />
-        <activity
             android:name=".DashboardRetail"
             android:exported="false" />
         <activity

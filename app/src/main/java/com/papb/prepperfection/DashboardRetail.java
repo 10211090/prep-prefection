@@ -72,19 +72,19 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
         historyActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(DashboardRetail.this, HistoryActivity.class));
+                startActivity(new Intent(DashboardRetail.this, HistoryActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
         notifActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(DashboardRetail.this, NotifActivity.class));
+                startActivity(new Intent(DashboardRetail.this, NotifActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
         settingActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(DashboardRetail.this, SettingActivity.class));
+                startActivity(new Intent(DashboardRetail.this, SettingActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
 

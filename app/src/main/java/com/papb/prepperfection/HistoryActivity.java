@@ -61,19 +61,19 @@ public class HistoryActivity extends AppCompatActivity implements PopupMenu.OnMe
         DashboardActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HistoryActivity.this, DashboardRetail.class));
+                startActivity(new Intent(HistoryActivity.this, DashboardRetail.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
         notifActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HistoryActivity.this, NotifActivity.class));
+                startActivity(new Intent(HistoryActivity.this, NotifActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
         settingActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HistoryActivity.this, SettingActivity.class));
+                startActivity(new Intent(HistoryActivity.this, SettingActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
 
