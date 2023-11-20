@@ -38,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final String SHARED_PREF_NAME = "mypref";
     private static final String KEY_NAME = "name";
     private static final String KEY_EMAIL = "email";
+    private static final String KEY_PROFILE = "profile";
     Button loginBtn;
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
@@ -123,6 +124,7 @@ public class LoginActivity extends AppCompatActivity {
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString(KEY_NAME, user.getDisplayName().toString());
                             editor.putString(KEY_EMAIL, user.getEmail().toString());
+                            editor.putString(KEY_PROFILE, user.getPhotoUrl().toString());
                             editor.apply();
 
                             Intent intent = new Intent(LoginActivity.this, DashboardRetail.class);

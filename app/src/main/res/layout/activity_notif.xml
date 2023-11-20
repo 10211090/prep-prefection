@@ -4,40 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/dashboardRetail"
     android:background="#ECECEC"
-    tools:context=".DashboardRetail">
+    tools:context=".NotifActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/topBarRetail"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="70dp"
         android:background="@drawable/shape_dashboard"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp">
 
         <TextView
-            android:id="@+id/txtWelcome"
+            android:id="@+id/txtHeaderNotif"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             android:fontFamily="sans-serif"
-            android:text="Selamat datang!"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
-
-        <TextView
-            android:id="@+id/txtNameAccount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="55dp"
-            android:fontFamily="sans-serif"
-            android:text="Nama Account"
+            android:text="Notifikasi"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -46,18 +31,19 @@
             tools:ignore="MissingConstraints" />
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/imgProfile"
+            android:id="@+id/imgProfileNotif"
             android:layout_width="50dp"
             android:layout_height="50dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
             android:src="@color/white"
             android:onClick="showProfile"
             app:shapeAppearanceOverlay="@style/Circular" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/btmBarRetail"
@@ -70,17 +56,17 @@
         tools:ignore="MissingConstraints">
 
         <ImageView
-            android:id="@+id/homeIcoHome"
+            android:id="@+id/homeIcoNotif"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginLeft="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/icon_home_active"
-            />
+            app:srcCompat="@drawable/icon_home_inactive"
+            app:tint="#787675" />
         <ImageView
-            android:id="@+id/historyIcoHome"
+            android:id="@+id/historyIcoNotif"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginLeft="110dp"
@@ -91,18 +77,17 @@
             app:tint="#787675" />
 
         <ImageView
-            android:id="@+id/notifIcoHome"
+            android:id="@+id/notifIcoNotif"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginRight="110dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/icon_notif_inactive"
-            app:tint="#787675" />
+            app:srcCompat="@drawable/icon_notif_active" />
 
         <ImageView
-            android:id="@+id/settingIcoHome"
+            android:id="@+id/settingIcoNotif"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginRight="30dp"
@@ -114,7 +99,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/shapeableImageView"
         android:layout_width="75dp"
@@ -125,25 +109,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/btmBarRetail" />
 
-    <Button
-        android:layout_width="60dp"
-        android:layout_height="67dp"
-        app:layout_constraintBottom_toBottomOf="@+id/btmBarRetail"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:backgroundTint="#ECB255"
-        android:layout_marginBottom="35dp"
-        android:text="+"
-        android:textSize="25sp"/>
-
     <TextView
-        android:id="@+id/nameActivity"
+        android:id="@+id/textViewNotif"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="This is Dashboard Home"
+        android:text="This is Notif"
         app:layout_constraintBottom_toTopOf="@+id/btmBarRetail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topBarRetail" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

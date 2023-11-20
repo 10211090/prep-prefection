@@ -1,21 +1,15 @@
 package com.papb.prepperfection;
 
-import static android.app.ProgressDialog.show;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.RoundedCorner;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -26,21 +20,22 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
-public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
+public class HistoryActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
+
+    ImageView DashboardActivity, notifActivity, settingActivity;
     SharedPreferences sharedPreferences;
     GoogleSignInClient mGoogleSignInClient;
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
-    ImageView historyActivity, notifActivity, settingActivity;
     private static final String SHARED_PREF_NAME = "mypref";
     private static final String KEY_NAME = "name";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PROFILE = "profile";
-    @SuppressLint("MissingInflatedId")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard_retail);
+        setContentView(R.layout.activity_history);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -52,46 +47,38 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
 
         mGoogleSignInClient = GoogleSignIn.getClient(this,googleSignInOptions);
 
-        TextView txtNameAccount;
-        txtNameAccount = findViewById(R.id.txtNameAccount);
-
         ImageView ImgProfile;
-        ImgProfile = findViewById(R.id.imgProfile);
+        ImgProfile = findViewById(R.id.imgProfileHistory);
 
         sharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-        String name = sharedPreferences.getString(KEY_NAME,null);
-        txtNameAccount.setText(name);
-
         String profileUrl = sharedPreferences.getString(KEY_PROFILE,null);
-        Picasso.with(DashboardRetail.this).load(profileUrl).into(ImgProfile);
+        Picasso.with(HistoryActivity.this).load(profileUrl).into(ImgProfile);
 
-        historyActivity = findViewById(R.id.historyIcoHome);
-        notifActivity = findViewById(R.id.notifIcoHome);
-        settingActivity = findViewById(R.id.settingIcoHome);
+        DashboardActivity = findViewById(R.id.homeIcoHistory);
+        notifActivity = findViewById(R.id.notifIcoHistory);
+        settingActivity = findViewById(R.id.settingIcoHistory);
 
-        historyActivity.setOnClickListener(new View.OnClickListener() {
+        DashboardActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(DashboardRetail.this, HistoryActivity.class));
+                startActivity(new Intent(HistoryActivity.this, DashboardRetail.class));
             }
         });
         notifActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(DashboardRetail.this, NotifActivity.class));
+                startActivity(new Intent(HistoryActivity.this, NotifActivity.class));
             }
         });
         settingActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(DashboardRetail.this, SettingActivity.class));
+                startActivity(new Intent(HistoryActivity.this, SettingActivity.class));
             }
         });
 
 
-
     }
-
     public void showProfile(View v){
         PopupMenu popUp = new PopupMenu(this, v);
         popUp.setOnMenuItemClickListener(this);
@@ -114,12 +101,11 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
 
                     firebaseAuth.signOut();
 
-                    startActivity(new Intent(DashboardRetail.this,MainActivity.class));
+                    startActivity(new Intent(HistoryActivity.this,MainActivity.class));
                     finish();
                 }
             });
         }
         return false;
     }
-
 }
