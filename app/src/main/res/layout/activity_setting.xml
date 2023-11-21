@@ -124,7 +124,8 @@
                     android:padding="3dp"
                     android:text="Tentang kami"
                     android:textAlignment="center"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:textColor="#787675"/>
             </TableRow>
 
             <View
@@ -138,7 +139,8 @@
                     android:text="Term and condition"
                     android:textStyle="italic"
                     android:textAlignment="center"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:textColor="#787675"/>
             </TableRow>
             <View
                 android:layout_height="1dip"
@@ -225,6 +227,7 @@
         app:layout_constraintStart_toStartOf="@+id/btmBarRetail" />
 
     <Button
+        android:id="@+id/btnAction"
         android:layout_width="60dp"
         android:layout_height="67dp"
         app:layout_constraintBottom_toBottomOf="@+id/btmBarRetail"

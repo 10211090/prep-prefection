@@ -126,6 +126,7 @@
         app:layout_constraintStart_toStartOf="@+id/btmBarRetail" />
 
     <Button
+        android:id="@+id/btnAction"
         android:layout_width="60dp"
         android:layout_height="67dp"
         app:layout_constraintBottom_toBottomOf="@+id/btmBarRetail"

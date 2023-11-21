@@ -3,15 +3,23 @@ package com.papb.prepperfection;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -25,6 +33,7 @@ import com.squareup.picasso.Picasso;
 public class SettingActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
 
     ImageView DashboardActivity, historyActivity, notifActivity;
+    Button btnAction;
     Button btnLogout;
     SharedPreferences sharedPreferences;
     GoogleSignInClient mGoogleSignInClient;
@@ -63,6 +72,7 @@ public class SettingActivity extends AppCompatActivity implements PopupMenu.OnMe
         ImgProfile = findViewById(R.id.imgProfileSetting);
         ImgProfileMenu = findViewById(R.id.imgProfileSettingMenu);
 
+
         String profileUrl = sharedPreferences.getString(KEY_PROFILE,null);
         Picasso.with(SettingActivity.this).load(profileUrl).into(ImgProfile);
         Picasso.with(SettingActivity.this).load(profileUrl).into(ImgProfileMenu);
@@ -71,6 +81,7 @@ public class SettingActivity extends AppCompatActivity implements PopupMenu.OnMe
         historyActivity = findViewById(R.id.historyIcoSetting);
         notifActivity = findViewById(R.id.notifIcoSetting);
         btnLogout = findViewById(R.id.btnLogout);
+        btnAction = findViewById(R.id.btnAction);
 
         DashboardActivity.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +121,68 @@ public class SettingActivity extends AppCompatActivity implements PopupMenu.OnMe
                 });
             }
         });
+        btnAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showBottomDialog();
+            }
+        });
+
+    }
+
+    private void showBottomDialog() {
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.bottom_sheet);
+
+        LinearLayout videoLayout = dialog.findViewById(R.id.layoutCart);
+        LinearLayout shortsLayout = dialog.findViewById(R.id.layoutReceipe);
+        LinearLayout liveLayout = dialog.findViewById(R.id.layoutPromo);
+        ImageView cancelButton = dialog.findViewById(R.id.cancelButton);
+
+        videoLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+                Toast.makeText(SettingActivity.this,"Keranjang Belanja is clicked",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        shortsLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+                Toast.makeText(SettingActivity.this,"Rekomendasi Resep is Clicked",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        liveLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+                Toast.makeText(SettingActivity.this,"Voucher Promo is Clicked",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
 
     }
 
