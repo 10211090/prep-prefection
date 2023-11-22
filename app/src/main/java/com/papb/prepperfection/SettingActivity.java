@@ -18,6 +18,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +35,7 @@ import com.squareup.picasso.Picasso;
 public class SettingActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
 
     ImageView DashboardActivity, historyActivity, notifActivity;
+    TableRow tblTentang, tblTerm;
     Button btnAction;
     Button btnLogout;
     SharedPreferences sharedPreferences;
@@ -82,6 +85,8 @@ public class SettingActivity extends AppCompatActivity implements PopupMenu.OnMe
         notifActivity = findViewById(R.id.notifIcoSetting);
         btnLogout = findViewById(R.id.btnLogout);
         btnAction = findViewById(R.id.btnAction);
+        tblTentang = findViewById(R.id.tblTentang);
+        tblTerm = findViewById(R.id.tblTerm);
 
         DashboardActivity.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +132,18 @@ public class SettingActivity extends AppCompatActivity implements PopupMenu.OnMe
                 showBottomDialog();
             }
         });
+        tblTentang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTentang();
+            }
+        });
+        tblTerm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTerm();
+            }
+        });
 
     }
 
@@ -170,6 +187,51 @@ public class SettingActivity extends AppCompatActivity implements PopupMenu.OnMe
 
             }
         });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
+
+    }
+
+    private void showTentang() {
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.tentang_kami);
+
+        ImageView cancelButton = dialog.findViewById(R.id.cancelButton);
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
+
+    }
+    private void showTerm() {
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.term_condition);
+
+        ImageView cancelButton = dialog.findViewById(R.id.cancelButton);
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
