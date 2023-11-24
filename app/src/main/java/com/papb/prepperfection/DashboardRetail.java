@@ -102,6 +102,7 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
             public void onClick(View view) {
                 showBottomDialog();
             }
+
         });
 
 
@@ -142,9 +143,51 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
         liveLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showPromoDialog();
+
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
+
+    }
+    private void showPromoDialog() {
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.activity_promo);
+
+        LinearLayout promo1 = dialog.findViewById(R.id.layoutPromo1);
+        LinearLayout promo2 = dialog.findViewById(R.id.layoutPromo2);
+        ImageView cancelButton = dialog.findViewById(R.id.cancelButton);
+
+        promo1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
                 dialog.dismiss();
-                Toast.makeText(DashboardRetail.this,"Voucher Promo is Clicked",Toast.LENGTH_SHORT).show();
+                Toast.makeText(DashboardRetail.this,"25% Discount telah di klaim dan sedang digunakan",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        promo2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+                Toast.makeText(DashboardRetail.this,"25% Discount telah di klaim dan sedang digunakan",Toast.LENGTH_SHORT).show();
 
             }
         });
