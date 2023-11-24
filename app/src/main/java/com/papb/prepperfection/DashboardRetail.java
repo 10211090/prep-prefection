@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.RoundedCorner;
@@ -31,6 +32,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
@@ -39,6 +42,7 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
     GoogleSignInClient mGoogleSignInClient;
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
+    DatabaseReference mDatabase;
     ImageView historyActivity, notifActivity, settingActivity;
     Button btnAction;
     private static final String SHARED_PREF_NAME = "mypref";
@@ -53,6 +57,7 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
+        mDatabase = firebaseDatabase.getReference();
 
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -60,6 +65,18 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this,googleSignInOptions);
+
+        mDatabase.child("Users").child("N461f6U2Kyf3kCkQUsv8ooXZljz2").child("email").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Toast.makeText(DashboardRetail.this,"Error getting data",Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(DashboardRetail.this,String.valueOf(task.getResult().getValue()),Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         TextView txtNameAccount;
         txtNameAccount = findViewById(R.id.txtNameAccount);
