@@ -1,4 +1,4 @@
-package com.papb.prepperfection;
+package com.papb.prepperfection.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +27,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.papb.prepperfection.MainActivity;
+import com.papb.prepperfection.R;
 import com.squareup.picasso.Picasso;
 
 public class NotifActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
@@ -173,7 +175,7 @@ public class NotifActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
                     firebaseAuth.signOut();
 
-                    startActivity(new Intent(NotifActivity.this,MainActivity.class));
+                    startActivity(new Intent(NotifActivity.this, MainActivity.class));
                     finish();
                 }
             });

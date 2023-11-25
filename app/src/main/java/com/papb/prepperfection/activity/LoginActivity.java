@@ -1,4 +1,4 @@
-package com.papb.prepperfection;
+package com.papb.prepperfection.activity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,15 +8,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
-import android.content.SharedPreferences;
 
-import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -30,6 +25,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.FirebaseDatabase;
+import com.papb.prepperfection.R;
+import com.papb.prepperfection.group.Users;
 
 
 public class LoginActivity extends AppCompatActivity {

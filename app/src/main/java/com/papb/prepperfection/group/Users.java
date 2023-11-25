@@ -1,4 +1,4 @@
-package com.papb.prepperfection;
+package com.papb.prepperfection.group;
 
 public class Users {
     String userId, name, email, profile;

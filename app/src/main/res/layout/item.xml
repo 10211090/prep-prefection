@@ -25,7 +25,7 @@
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
-            tools:src="@tools:sample/avatars" />
+            android:src="@drawable/logo_only" />
 
         <TextView
             android:id="@+id/tv_item_name"
@@ -39,7 +39,7 @@
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toEndOf="@+id/img_item_photo"
             card_view:layout_constraintTop_toTopOf="@+id/img_item_photo"
-            tools:text="Nama Product" />
+            android:text="Nama produk" />
 
         <TextView
             android:id="@+id/tv_item_description"
@@ -53,7 +53,7 @@
             card_view:layout_constraintStart_toStartOf="@+id/tv_item_name"
             card_view:layout_constraintTop_toBottomOf="@+id/tv_item_name"
             card_view:layout_constraintVertical_bias="0.0"
-            tools:text="Rp." />
+            android:text="Rp." />
         <TextView
             android:id="@+id/tv_item_description_value"
             android:layout_width="0dp"
@@ -67,7 +67,7 @@
             card_view:layout_constraintStart_toStartOf="@+id/tv_item_name"
             card_view:layout_constraintTop_toBottomOf="@+id/tv_item_name"
             card_view:layout_constraintVertical_bias="0.0"
-            tools:text="10.000" />
+            android:text="10.000" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/button"

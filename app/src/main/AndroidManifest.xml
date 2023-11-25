@@ -19,19 +19,19 @@
             android:name=".PromoActivity"
             android:exported="false" />
         <activity
-            android:name=".HistoryActivity"
+            android:name=".activity.HistoryActivity"
             android:exported="false" />
         <activity
-            android:name=".SettingActivity"
+            android:name=".activity.SettingActivity"
             android:exported="false" />
         <activity
-            android:name=".NotifActivity"
+            android:name=".activity.NotifActivity"
             android:exported="false" />
         <activity
-            android:name=".DashboardRetail"
+            android:name=".activity.DashboardRetail"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activity.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
