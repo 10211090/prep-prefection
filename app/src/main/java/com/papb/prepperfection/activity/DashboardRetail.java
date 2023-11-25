@@ -91,10 +91,7 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                     Products products = dataSnapshot.getValue(Products.class);
-                    Toast.makeText(DashboardRetail.this,products.getNamaProduk(),Toast.LENGTH_LONG).show();
-
                     list.add(products);
-                    Toast.makeText(DashboardRetail.this,products.getKategoriProduk(),Toast.LENGTH_LONG).show();
 
                 }
                 productAdapter.notifyDataSetChanged();
