@@ -52,7 +52,8 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
     FirebaseDatabase firebaseDatabase;
     DatabaseReference mDatabase;
     ImageView historyActivity, notifActivity, settingActivity;
-    Button btnAction;
+    Button btnAction, btnVegan, btnFruit, btnSpice;
+    Boolean bolBtnVegan = false;
 
     RecyclerView recyclerView;
     ProductAdapter productAdapter;
@@ -77,31 +78,30 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
 
         mGoogleSignInClient = GoogleSignIn.getClient(this,googleSignInOptions);
 
-        recyclerView = findViewById(R.id.productList);
-        mDatabase = FirebaseDatabase.getInstance().getReference("Products");
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        setDataAdapter();
 
-        list = new ArrayList<>();
-        productAdapter = new ProductAdapter(this,list);
-        recyclerView.setAdapter(productAdapter);
+        btnVegan = findViewById(R.id.buttonVegan);
 
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        btnVegan.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    Products products = dataSnapshot.getValue(Products.class);
-                    list.add(products);
-
+            public void onClick(View v) {
+                if (bolBtnVegan == false){
+                    bolBtnVegan = true;
+                    btnVegan.setBackgroundColor(Color.GRAY);
+                    btnVegan.setTextColor(Color.WHITE);
+                    list.clear();
+                    productAdapter.notifyDataSetChanged();
+                }else {
+                    btnVegan.setBackgroundColor(Color.WHITE);
+                    btnVegan.setTextColor(Color.GRAY);
+                    bolBtnVegan = false;
+                    setDataAdapter();
                 }
-                productAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
+
 
         TextView txtNameAccount;
         txtNameAccount = findViewById(R.id.txtNameAccount);
@@ -279,4 +279,31 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
         return false;
     }
 
+    public void setDataAdapter(){
+        recyclerView = findViewById(R.id.productList);
+        mDatabase = FirebaseDatabase.getInstance().getReference("Products");
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        list = new ArrayList<>();
+        productAdapter = new ProductAdapter(this,list);
+        recyclerView.setAdapter(productAdapter);
+
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    Products products = dataSnapshot.getValue(Products.class);
+                    list.add(products);
+
+                }
+                productAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }

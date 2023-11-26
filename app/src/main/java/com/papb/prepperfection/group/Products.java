@@ -4,6 +4,7 @@ public class Products {
     String namaProduk;
     String hargaProduk;
     String kategoriProduk;
+    String photoProduk;
 
     public String getNamaProduk() {
         return namaProduk;
@@ -15,5 +16,8 @@ public class Products {
 
     public String getKategoriProduk() {
         return kategoriProduk;
+    }
+    public String getPhotoProduk() {
+        return photoProduk;
     }
 }

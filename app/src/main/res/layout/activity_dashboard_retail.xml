@@ -133,6 +133,7 @@
         android:fontFamily="sans-serif"
         android:text="Top Categories"
         android:textSize="17sp"
+        android:textColor="@color/main"
         app:layout_constraintTop_toBottomOf="@+id/topBarRetail" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -145,14 +146,14 @@
         app:layout_constraintTop_toBottomOf="@+id/topBarRetail">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/buttonVegan"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:layout_marginTop="50dp"
             android:backgroundTint="@color/white"
             android:text="   Vegan"
-            android:textColor="@color/main"
+            android:textColor="@color/grey"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/topBarRetail" />
 
@@ -167,14 +168,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/buttonFruit"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="150dp"
             android:layout_marginTop="50dp"
             android:backgroundTint="@color/white"
             android:text="   Fruit"
-            android:textColor="@color/main"
+            android:textColor="@color/grey"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/topBarRetail" />
 
@@ -186,7 +187,7 @@
             android:src="@drawable/ic_fruit"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/button" />
+            app:layout_constraintTop_toTopOf="@+id/buttonFruit" />
 
         <Button
             android:id="@+id/button"
@@ -196,7 +197,7 @@
             android:layout_marginTop="50dp"
             android:backgroundTint="@color/white"
             android:text="    Spice"
-            android:textColor="@color/main"
+            android:textColor="@color/grey"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/topBarRetail" />
 
@@ -215,8 +216,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:padding="25dp"
+        android:layout_height="450dp"
+        android:padding="15dp"
         app:layout_constraintBottom_toTopOf="@+id/btmBarRetail"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 

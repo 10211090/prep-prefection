@@ -21,6 +21,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Locale;
+import com.squareup.picasso.Picasso;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHolder> {
 
@@ -52,6 +53,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
         holder.nameProduct.setText(products.getNamaProduk());
         holder.priceProduct.setText(format.format(Integer.valueOf(products.getHargaProduk())));
         holder.categoryProduct.setText("    "+products.getKategoriProduk());
+        Picasso.with(context).load(products.getPhotoProduk()).into(holder.photoProduct);
 
         if (products.getKategoriProduk().equals("Vegan") ){
                holder.categoryProductImg.setImageResource(R.drawable.ic_vegan);
@@ -70,7 +72,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
         TextView nameProduct, priceProduct, categoryProduct;
-        ImageView categoryProductImg;
+        ImageView categoryProductImg, photoProduct;
         public MyViewHolder(@NonNull View itemView){
             super(itemView);
 
@@ -78,6 +80,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
             priceProduct = itemView.findViewById(R.id.tv_item_description_value);
             categoryProduct = itemView.findViewById(R.id.item_name_category);
             categoryProductImg = itemView.findViewById(R.id.item_img_category);
+            photoProduct = itemView.findViewById(R.id.img_item_photo);
         }
 
     }
