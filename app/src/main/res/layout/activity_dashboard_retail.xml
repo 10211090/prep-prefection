@@ -190,7 +190,7 @@
             app:layout_constraintTop_toTopOf="@+id/buttonFruit" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/buttonSpice"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="270dp"
@@ -209,7 +209,7 @@
             android:src="@drawable/ic_spice"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/button" />
+            app:layout_constraintTop_toTopOf="@+id/buttonSpice" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -33,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
     private static final String SHARED_PREF_NAME = "mypref";
+    private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PROFILE = "profile";
@@ -117,8 +118,10 @@ public class LoginActivity extends AppCompatActivity {
                             users.setProfile(user.getPhotoUrl().toString());
 
                             firebaseDatabase.getReference().child("Users").child(user.getUid()).setValue(users);
+                            firebaseDatabase.getReference().child("Carts").child(user.getUid()).setValue("");
 
                             SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString(KEY_ID, user.getUid().toString());
                             editor.putString(KEY_NAME, user.getDisplayName().toString());
                             editor.putString(KEY_EMAIL, user.getEmail().toString());
                             editor.putString(KEY_PROFILE, user.getPhotoUrl().toString());

@@ -1,6 +1,7 @@
 package com.papb.prepperfection.group;
 
 public class Products {
+    String idProduk;
     String namaProduk;
     String hargaProduk;
     String kategoriProduk;
@@ -19,5 +20,8 @@ public class Products {
     }
     public String getPhotoProduk() {
         return photoProduk;
+    }
+    public String getIdProduk() {
+        return idProduk;
     }
 }

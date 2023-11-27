@@ -1,11 +1,16 @@
 package com.papb.prepperfection.adapter;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.Image;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,10 +28,16 @@ import java.util.Currency;
 import java.util.Locale;
 import com.squareup.picasso.Picasso;
 
-public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHolder> {
+import org.w3c.dom.Text;
 
+public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHolder> {
     Context context;
     ArrayList<Products> list;
+    private OnItemClickCallback onItemClickCallback;
+
+    public void setOnItemClickCallback(OnItemClickCallback onItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback;
+    }
 
     public ProductAdapter(Context context, ArrayList<Products> list){
         this.context = context;
@@ -62,6 +73,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
         } else {
             holder.categoryProductImg.setImageResource(R.drawable.ic_spice);
         }
+
+        holder.itemView.setOnClickListener(v -> onItemClickCallback.onItemClicked(list.get(holder.getAdapterPosition())));
+
     }
 
     @Override
@@ -83,5 +97,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
             photoProduct = itemView.findViewById(R.id.img_item_photo);
         }
 
+    }
+    public interface OnItemClickCallback {
+        void onItemClicked(Products data);
     }
 }

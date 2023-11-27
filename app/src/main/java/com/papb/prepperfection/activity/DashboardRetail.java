@@ -36,14 +36,21 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.papb.prepperfection.MainActivity;
 import com.papb.prepperfection.R;
 import com.papb.prepperfection.adapter.ProductAdapter;
+import com.papb.prepperfection.group.Carts;
 import com.papb.prepperfection.group.Products;
 import com.squareup.picasso.Picasso;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Currency;
+import java.util.Date;
+import java.util.Locale;
 
 public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     SharedPreferences sharedPreferences;
@@ -53,12 +60,13 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
     DatabaseReference mDatabase;
     ImageView historyActivity, notifActivity, settingActivity;
     Button btnAction, btnVegan, btnFruit, btnSpice;
-    Boolean bolBtnVegan = false;
+    Boolean bolBtnVegan = false, bolBtnFruit = false, bolBtnSpice = false;
 
     RecyclerView recyclerView;
     ProductAdapter productAdapter;
     ArrayList<Products> list;
     private static final String SHARED_PREF_NAME = "mypref";
+    private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PROFILE = "profile";
@@ -81,6 +89,8 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
         setDataAdapter();
 
         btnVegan = findViewById(R.id.buttonVegan);
+        btnFruit = findViewById(R.id.buttonFruit);
+        btnSpice = findViewById(R.id.buttonSpice);
 
         btnVegan.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ResourceAsColor")
@@ -88,14 +98,82 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
             public void onClick(View v) {
                 if (bolBtnVegan == false){
                     bolBtnVegan = true;
+                    bolBtnFruit = false;
+                    bolBtnSpice = false;
                     btnVegan.setBackgroundColor(Color.GRAY);
                     btnVegan.setTextColor(Color.WHITE);
+                    btnFruit.setBackgroundColor(Color.WHITE);
+                    btnFruit.setTextColor(Color.GRAY);
+                    btnSpice.setBackgroundColor(Color.WHITE);
+                    btnSpice.setTextColor(Color.GRAY);
                     list.clear();
                     productAdapter.notifyDataSetChanged();
+                    setDataVeganAdapter();
+
                 }else {
                     btnVegan.setBackgroundColor(Color.WHITE);
                     btnVegan.setTextColor(Color.GRAY);
                     bolBtnVegan = false;
+                    list.clear();
+                    productAdapter.notifyDataSetChanged();
+                    setDataAdapter();
+                }
+
+            }
+        });
+        btnFruit.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onClick(View v) {
+                if (bolBtnFruit == false){
+                    bolBtnFruit = true;
+                    bolBtnVegan = false;
+                    bolBtnSpice = false;
+                    btnFruit.setBackgroundColor(Color.GRAY);
+                    btnFruit.setTextColor(Color.WHITE);
+                    btnVegan.setBackgroundColor(Color.WHITE);
+                    btnVegan.setTextColor(Color.GRAY);
+                    btnSpice.setBackgroundColor(Color.WHITE);
+                    btnSpice.setTextColor(Color.GRAY);
+                    list.clear();
+                    productAdapter.notifyDataSetChanged();
+                    setDataFruitAdapter();
+
+                }else {
+                    btnFruit.setBackgroundColor(Color.WHITE);
+                    btnFruit.setTextColor(Color.GRAY);
+                    bolBtnFruit = false;
+                    list.clear();
+                    productAdapter.notifyDataSetChanged();
+                    setDataAdapter();
+                }
+
+            }
+        });
+        btnSpice.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onClick(View v) {
+                if (bolBtnSpice == false){
+                    bolBtnSpice = true;
+                    bolBtnFruit = false;
+                    bolBtnVegan = false;
+                    btnSpice.setBackgroundColor(Color.GRAY);
+                    btnSpice.setTextColor(Color.WHITE);
+                    btnFruit.setBackgroundColor(Color.WHITE);
+                    btnFruit.setTextColor(Color.GRAY);
+                    btnVegan.setBackgroundColor(Color.WHITE);
+                    btnVegan.setTextColor(Color.GRAY);
+                    list.clear();
+                    productAdapter.notifyDataSetChanged();
+                    setDataSpiceAdapter();
+
+                }else {
+                    btnSpice.setBackgroundColor(Color.WHITE);
+                    btnSpice.setTextColor(Color.GRAY);
+                    bolBtnSpice = false;
+                    list.clear();
+                    productAdapter.notifyDataSetChanged();
                     setDataAdapter();
                 }
 
@@ -288,6 +366,7 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
         list = new ArrayList<>();
         productAdapter = new ProductAdapter(this,list);
         recyclerView.setAdapter(productAdapter);
+        productAdapter.setOnItemClickCallback(this::showSelectedProduct);
 
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -305,5 +384,229 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
 
             }
         });
+    }
+    public void setDataVeganAdapter(){
+        recyclerView = findViewById(R.id.productList);
+        mDatabase = FirebaseDatabase.getInstance().getReference("Products");
+        Query query = mDatabase.orderByChild("kategoriProduk").equalTo("Vegan");
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        list = new ArrayList<>();
+        productAdapter = new ProductAdapter(this,list);
+        recyclerView.setAdapter(productAdapter);
+        productAdapter.setOnItemClickCallback(this::showSelectedProduct);
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    Products products = dataSnapshot.getValue(Products.class);
+                    list.add(products);
+
+                }
+                productAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    public void setDataFruitAdapter(){
+        recyclerView = findViewById(R.id.productList);
+        mDatabase = FirebaseDatabase.getInstance().getReference("Products");
+        Query query = mDatabase.orderByChild("kategoriProduk").equalTo("Fruit");
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        list = new ArrayList<>();
+        productAdapter = new ProductAdapter(this,list);
+        recyclerView.setAdapter(productAdapter);
+        productAdapter.setOnItemClickCallback(this::showSelectedProduct);
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    Products products = dataSnapshot.getValue(Products.class);
+                    list.add(products);
+
+                }
+                productAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    public void setDataSpiceAdapter(){
+        recyclerView = findViewById(R.id.productList);
+        mDatabase = FirebaseDatabase.getInstance().getReference("Products");
+        Query query = mDatabase.orderByChild("kategoriProduk").equalTo("Spice");
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        list = new ArrayList<>();
+        productAdapter = new ProductAdapter(this,list);
+        recyclerView.setAdapter(productAdapter);
+        productAdapter.setOnItemClickCallback(this::showSelectedProduct);
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    Products products = dataSnapshot.getValue(Products.class);
+                    list.add(products);
+
+                }
+                productAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    private void showSelectedProduct(Products products) {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.select_product_sheet);
+
+        NumberFormat format = NumberFormat.getCurrencyInstance();
+        Locale locale = new Locale("in", "ID");
+        format.setMaximumFractionDigits(0);
+        format.setCurrency(Currency.getInstance(locale));
+
+        TextView namaProduk = dialog.findViewById(R.id.name_select_product);
+        TextView hargaProduk = dialog.findViewById(R.id.price_select_product);
+        TextView totalHarga = dialog.findViewById(R.id.price_total_select_product);
+        TextView kategoriProduk = dialog.findViewById(R.id.category_name_select_product);
+        TextView valueProduk = dialog.findViewById(R.id.value_select_product);
+        ImageView imgKategoriProduk = dialog.findViewById(R.id.category_img_select_product);
+        ImageView imgProduk = dialog.findViewById(R.id.img_select_product);
+        ImageView cancelButton = dialog.findViewById(R.id.cancelButton);
+        Button incrementButton = dialog.findViewById(R.id.increment_value_product);
+        Button decrementButton = dialog.findViewById(R.id.decrement_value_product);
+        Button cartButton = dialog.findViewById(R.id.btnAddCart);
+
+        namaProduk.setText(products.getNamaProduk());
+        hargaProduk.setText(format.format(Integer.valueOf(products.getHargaProduk())));
+        totalHarga.setText(format.format(Integer.valueOf(products.getHargaProduk())));
+        kategoriProduk.setText("    "+products.getKategoriProduk());
+        Picasso.with(this).load(products.getPhotoProduk()).into(imgProduk);
+
+        if (products.getKategoriProduk().equals("Vegan") ){
+            imgKategoriProduk.setImageResource(R.drawable.ic_vegan);
+        } else if (products.getKategoriProduk().equals("Fruit") ){
+            imgKategoriProduk.setImageResource(R.drawable.ic_fruit);
+        } else {
+            imgKategoriProduk.setImageResource(R.drawable.ic_spice);
+        }
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        incrementButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String valueString = String.valueOf(valueProduk.getText());
+                Integer valueInt = Integer.valueOf(valueString);
+                valueProduk.setText(String.valueOf(valueInt+1));
+                totalHarga.setText(format.format(Integer.valueOf(products.getHargaProduk())*(valueInt+1)));
+
+            }
+        });
+        decrementButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String valueString = String.valueOf(valueProduk.getText());
+                Integer valueInt = Integer.valueOf(valueString);
+
+                if (valueInt > 1){
+                    valueProduk.setText(String.valueOf(valueInt-1));
+                    totalHarga.setText(format.format(Integer.valueOf(products.getHargaProduk())*(valueInt-1)));
+                }
+
+            }
+        });
+        cartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Carts carts = new Carts();
+                String userId = sharedPreferences.getString(KEY_ID,null);
+                mDatabase = FirebaseDatabase.getInstance().getReference("Carts");
+                mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()){
+                            int count = (int) snapshot.getChildrenCount();
+                            if (count > 0){
+                                mDatabase = FirebaseDatabase.getInstance().getReference("Carts").child(userId).child("CART00"+String.valueOf(count));
+                                Query query = mDatabase.orderByChild("statusItem").equalTo("Menunggu Pembayaran");
+                                query.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if (snapshot.exists()){
+                                            Toast.makeText(DashboardRetail.this,"Masuk yg belum bayar",Toast.LENGTH_SHORT).show();
+                                        }
+                                        else{
+                                            Toast.makeText(DashboardRetail.this,"Tidak Masuk yg belum bayar",Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                            }else{
+                                carts.setUserId(userId);
+                                carts.setCartId("CART001");
+                                carts.setProductId(products.getIdProduk());
+                                carts.setNameItem(products.getNamaProduk());
+                                carts.setQtyItem(String.valueOf(valueProduk.getText()));
+                                String qtyItem = String.valueOf(valueProduk.getText());
+                                String priceItem = products.getHargaProduk();
+                                int totalHargaItem = Integer.valueOf(qtyItem)*Integer.valueOf(priceItem);
+                                carts.setPriceItem(String.valueOf(totalHargaItem));
+                                carts.setStatusItem("Menunggu Pembayaran");
+                                Date currentTime = Calendar.getInstance().getTime();
+                                carts.setTglItem(String.valueOf(currentTime));
+
+                                firebaseDatabase.getReference().child("Carts").child(userId).child("CART001").child(products.getIdProduk()).setValue(carts);
+                                dialog.dismiss();
+                                Toast.makeText(DashboardRetail.this,"Produk "+products.getNamaProduk()+" dengan harga "+totalHarga.getText()+"  telah ditambahkan pada keranjang.",Toast.LENGTH_SHORT).show();
+
+
+                            }
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
     }
 }

@@ -40,6 +40,7 @@ public class HistoryActivity extends AppCompatActivity implements PopupMenu.OnMe
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
     private static final String SHARED_PREF_NAME = "mypref";
+    private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PROFILE = "profile";
