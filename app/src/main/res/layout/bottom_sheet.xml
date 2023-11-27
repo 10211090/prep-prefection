@@ -69,6 +69,15 @@
             android:textColor="@color/main"
             android:layout_marginLeft="30dp"
             android:textSize="16sp"/>
+        <TextView
+            android:id="@+id/int_cart_sheet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-black"
+            android:text=""
+            android:textColor="#f51616"
+            android:textSize="16sp"
+            android:layout_marginLeft="5dp" />
 
     </LinearLayout>
 

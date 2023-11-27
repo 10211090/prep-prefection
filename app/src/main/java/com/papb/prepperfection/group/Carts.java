@@ -1,7 +1,7 @@
 package com.papb.prepperfection.group;
 
 public class Carts {
-    String userId, cartId, productId, nameItem, qtyItem, priceItem, statusItem, tglItem;
+    String userId, cartId, productId, nameItem, qtyItem, priceItem, categoryItem, photoItem, statusItem, tglItem;
 
     public String getUserId() {
         return userId;
@@ -50,6 +50,23 @@ public class Carts {
     public void setPriceItem(String priceItem) {
         this.priceItem = priceItem;
     }
+
+    public String getCategoryItem() {
+        return categoryItem;
+    }
+
+    public void setCategoryItem(String categoryItem) {
+        this.categoryItem = categoryItem;
+    }
+
+    public String getPhotoItem() {
+        return photoItem;
+    }
+
+    public void setPhotoItem(String photoItem) {
+        this.photoItem = photoItem;
+    }
+
     public String getStatusItem() {
         return statusItem;
     }

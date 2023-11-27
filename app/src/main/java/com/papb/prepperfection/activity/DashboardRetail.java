@@ -58,9 +58,11 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference mDatabase;
+    Integer intCartValue = 0;
     ImageView historyActivity, notifActivity, settingActivity;
     Button btnAction, btnVegan, btnFruit, btnSpice;
     Boolean bolBtnVegan = false, bolBtnFruit = false, bolBtnSpice = false;
+
 
     RecyclerView recyclerView;
     ProductAdapter productAdapter;
@@ -85,6 +87,7 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this,googleSignInOptions);
+
 
         setDataAdapter();
 
@@ -181,6 +184,7 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
         });
 
 
+
         TextView txtNameAccount;
         txtNameAccount = findViewById(R.id.txtNameAccount);
 
@@ -193,6 +197,48 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
 
         String profileUrl = sharedPreferences.getString(KEY_PROFILE,null);
         Picasso.with(DashboardRetail.this).load(profileUrl).into(ImgProfile);
+
+        TextView intCart = findViewById(R.id.int_cart);
+
+        mDatabase = firebaseDatabase.getReference("Carts").child(String.valueOf(sharedPreferences.getString(KEY_ID,null)));
+        Query query = mDatabase;
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    int count = (int) snapshot.getChildrenCount();
+                    mDatabase = firebaseDatabase.getReference("Carts").child(String.valueOf(sharedPreferences.getString(KEY_ID,null))).child("CART00"+String.valueOf(count));
+                    Query query = mDatabase.orderByChild("statusItem").equalTo("Menunggu Pembayaran");
+
+                    query.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()){
+                                int count = (int) snapshot.getChildrenCount();
+                                intCartValue = count;
+                                intCart.setText(String.valueOf(count));
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+
+                }else {
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         historyActivity = findViewById(R.id.historyIcoHome);
         notifActivity = findViewById(R.id.notifIcoHome);
@@ -240,12 +286,21 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
         LinearLayout liveLayout = dialog.findViewById(R.id.layoutPromo);
         ImageView cancelButton = dialog.findViewById(R.id.cancelButton);
 
+        TextView intCartSheet = dialog.findViewById(R.id.int_cart_sheet);
+        if (intCartValue > 0){
+            intCartSheet.setText(String.valueOf(intCartValue));
+        }
+
         videoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                dialog.dismiss();
-                Toast.makeText(DashboardRetail.this,"Keranjang Belanja is clicked",Toast.LENGTH_SHORT).show();
+                if (intCartValue > 0){
+                    dialog.dismiss();
+                    startActivity(new Intent(DashboardRetail.this, CartActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                }else{
+                    dialog.dismiss();
+                    Toast.makeText(DashboardRetail.this,"Silahkan memasukkan Produk ke Keranjang Belanja terlebih dahulu",Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -555,10 +610,66 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         if (snapshot.exists()){
-                                            Toast.makeText(DashboardRetail.this,"Masuk yg belum bayar",Toast.LENGTH_SHORT).show();
+                                            carts.setUserId(userId);
+                                            carts.setCartId("CART00"+String.valueOf(count));
+                                            carts.setProductId(products.getIdProduk());
+                                            carts.setNameItem(products.getNamaProduk());
+                                            carts.setQtyItem(String.valueOf(valueProduk.getText()));
+                                            String qtyItem = String.valueOf(valueProduk.getText());
+                                            String priceItem = products.getHargaProduk();
+                                            int totalHargaItem = Integer.valueOf(qtyItem)*Integer.valueOf(priceItem);
+                                            carts.setPriceItem(String.valueOf(totalHargaItem));
+                                            carts.setCategoryItem(products.getKategoriProduk());
+                                            carts.setPhotoItem(products.getPhotoProduk());
+                                            carts.setStatusItem("Menunggu Pembayaran");
+                                            Date currentTime = Calendar.getInstance().getTime();
+                                            carts.setTglItem(String.valueOf(currentTime));
+
+                                            mDatabase = FirebaseDatabase.getInstance().getReference("Carts").child(userId).child("CART00"+String.valueOf(count));
+                                            Query query = mDatabase.orderByChild("productId").equalTo(String.valueOf(products.getIdProduk()));
+                                            query.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    if (snapshot.exists()){
+
+                                                        firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).child("qtyItem").setValue(String.valueOf(valueProduk.getText()));
+                                                        firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).child("priceItem").setValue(String.valueOf(totalHargaItem));
+                                                        dialog.dismiss();
+                                                        Toast.makeText(DashboardRetail.this,"Produk telah diupdate, "+products.getNamaProduk()+" dengan harga "+totalHarga.getText()+"  telah ditambahkan pada keranjang.",Toast.LENGTH_SHORT).show();
+
+                                                    }else{
+                                                        firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).setValue(carts);
+                                                        dialog.dismiss();
+                                                        Toast.makeText(DashboardRetail.this,"Produk "+products.getNamaProduk()+" dengan harga "+totalHarga.getText()+"  telah ditambahkan pada keranjang.",Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+
                                         }
                                         else{
-                                            Toast.makeText(DashboardRetail.this,"Tidak Masuk yg belum bayar",Toast.LENGTH_SHORT).show();
+                                            carts.setUserId(userId);
+                                            carts.setCartId("CART00"+String.valueOf(count+1));
+                                            carts.setProductId(products.getIdProduk());
+                                            carts.setNameItem(products.getNamaProduk());
+                                            carts.setQtyItem(String.valueOf(valueProduk.getText()));
+                                            String qtyItem = String.valueOf(valueProduk.getText());
+                                            String priceItem = products.getHargaProduk();
+                                            int totalHargaItem = Integer.valueOf(qtyItem)*Integer.valueOf(priceItem);
+                                            carts.setPriceItem(String.valueOf(totalHargaItem));
+                                            carts.setCategoryItem(products.getKategoriProduk());
+                                            carts.setPhotoItem(products.getPhotoProduk());
+                                            carts.setStatusItem("Menunggu Pembayaran");
+                                            Date currentTime = Calendar.getInstance().getTime();
+                                            carts.setTglItem(String.valueOf(currentTime));
+
+                                            firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count+1)).child(products.getIdProduk()).setValue(carts);
+                                            dialog.dismiss();
+                                            Toast.makeText(DashboardRetail.this,"Produk "+products.getNamaProduk()+" dengan harga "+totalHarga.getText()+"  telah ditambahkan pada keranjang.",Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
@@ -579,6 +690,8 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
                                 String priceItem = products.getHargaProduk();
                                 int totalHargaItem = Integer.valueOf(qtyItem)*Integer.valueOf(priceItem);
                                 carts.setPriceItem(String.valueOf(totalHargaItem));
+                                carts.setCategoryItem(products.getKategoriProduk());
+                                carts.setPhotoItem(products.getPhotoProduk());
                                 carts.setStatusItem("Menunggu Pembayaran");
                                 Date currentTime = Calendar.getInstance().getTime();
                                 carts.setTglItem(String.valueOf(currentTime));
@@ -586,7 +699,6 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
                                 firebaseDatabase.getReference().child("Carts").child(userId).child("CART001").child(products.getIdProduk()).setValue(carts);
                                 dialog.dismiss();
                                 Toast.makeText(DashboardRetail.this,"Produk "+products.getNamaProduk()+" dengan harga "+totalHarga.getText()+"  telah ditambahkan pada keranjang.",Toast.LENGTH_SHORT).show();
-
 
                             }
 

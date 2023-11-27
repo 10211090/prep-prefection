@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -26,7 +27,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.papb.prepperfection.MainActivity;
 import com.papb.prepperfection.R;
 import com.squareup.picasso.Picasso;
@@ -39,6 +45,8 @@ public class HistoryActivity extends AppCompatActivity implements PopupMenu.OnMe
     GoogleSignInClient mGoogleSignInClient;
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
+    DatabaseReference mDatabase;
+    Integer intCartValue;
     private static final String SHARED_PREF_NAME = "mypref";
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
@@ -66,6 +74,48 @@ public class HistoryActivity extends AppCompatActivity implements PopupMenu.OnMe
         sharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
         String profileUrl = sharedPreferences.getString(KEY_PROFILE,null);
         Picasso.with(HistoryActivity.this).load(profileUrl).into(ImgProfile);
+
+        TextView intCart = findViewById(R.id.int_cart);
+
+        mDatabase = firebaseDatabase.getReference("Carts").child(String.valueOf(sharedPreferences.getString(KEY_ID,null)));
+        Query query = mDatabase;
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    int count = (int) snapshot.getChildrenCount();
+                    mDatabase = firebaseDatabase.getReference("Carts").child(String.valueOf(sharedPreferences.getString(KEY_ID,null))).child("CART00"+String.valueOf(count));
+                    Query query = mDatabase.orderByChild("statusItem").equalTo("Menunggu Pembayaran");
+
+                    query.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()){
+                                int count = (int) snapshot.getChildrenCount();
+                                intCartValue = count;
+                                intCart.setText(String.valueOf(count));
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+
+                }else {
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         DashboardActivity = findViewById(R.id.homeIcoHistory);
         notifActivity = findViewById(R.id.notifIcoHistory);
@@ -109,6 +159,11 @@ public class HistoryActivity extends AppCompatActivity implements PopupMenu.OnMe
         LinearLayout shortsLayout = dialog.findViewById(R.id.layoutReceipe);
         LinearLayout liveLayout = dialog.findViewById(R.id.layoutPromo);
         ImageView cancelButton = dialog.findViewById(R.id.cancelButton);
+
+        TextView intCartSheet = dialog.findViewById(R.id.int_cart_sheet);
+        if (intCartValue > 0){
+            intCartSheet.setText(String.valueOf(intCartValue));
+        }
 
         videoLayout.setOnClickListener(new View.OnClickListener() {
             @Override

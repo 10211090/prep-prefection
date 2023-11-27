@@ -24,7 +24,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.papb.prepperfection.R;
 import com.papb.prepperfection.group.Users;
 
@@ -118,7 +121,22 @@ public class LoginActivity extends AppCompatActivity {
                             users.setProfile(user.getPhotoUrl().toString());
 
                             firebaseDatabase.getReference().child("Users").child(user.getUid()).setValue(users);
-                            firebaseDatabase.getReference().child("Carts").child(user.getUid()).setValue("");
+                            firebaseDatabase.getReference().child("Carts").child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()){
+
+                                    }
+                                    else {
+                                        firebaseDatabase.getReference().child("Carts").child(user.getUid());
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
 
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString(KEY_ID, user.getUid().toString());

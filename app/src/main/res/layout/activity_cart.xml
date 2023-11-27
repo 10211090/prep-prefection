@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ECECEC"
-    tools:context=".activity.HistoryActivity">
+    tools:context=".activity.CartActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/topBarRetail"
@@ -22,7 +22,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
             android:fontFamily="sans-serif"
-            android:text="Riwayat Pesanan"
+            android:text="Keranjang Belanja"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -31,7 +31,7 @@
             tools:ignore="MissingConstraints" />
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/imgProfileHistory"
+            android:id="@+id/imgProfileCart"
             android:layout_width="50dp"
             android:layout_height="50dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -56,27 +56,27 @@
         tools:ignore="MissingConstraints">
 
         <ImageView
-            android:id="@+id/homeIcoHistory"
+            android:id="@+id/homeIcoCart"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginLeft="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/icon_home_inactive"
-            app:tint="#787675" />
+            app:srcCompat="@drawable/icon_home_active" />
         <ImageView
-            android:id="@+id/historyIcoHistory"
+            android:id="@+id/historyIcoCart"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginLeft="110dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/icon_history_active" />
+            app:srcCompat="@drawable/icon_history_inactive"
+            app:tint="#787675"/>
 
         <ImageView
-            android:id="@+id/notifIcoHistory"
+            android:id="@+id/notifIcoCart"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginRight="110dp"
@@ -87,7 +87,7 @@
             app:tint="#787675" />
 
         <ImageView
-            android:id="@+id/settingIcoHistory"
+            android:id="@+id/settingIcoCart"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginRight="30dp"
@@ -99,6 +99,98 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/idCart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ID Pesanan :"
+        android:fontFamily="sans-serif"
+        android:textSize="12sp"
+        android:textColor="@color/main"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginTop="50dp"
+
+        android:padding="15dp"
+        app:layout_constraintTop_toBottomOf="@+id/topBarRetail">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="3dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/cartList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <!-- bla bla bla-->
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2">
+
+        <Button
+            android:id="@+id/btn25disc"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:backgroundTint="@color/white"
+            android:text="25% Discount"
+            android:textColor="@color/grey"
+            android:layout_marginRight="30dp"/>
+
+        <Button
+            android:id="@+id/btn50disc"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:backgroundTint="@color/white"
+            android:text="50% Discount"
+            android:textColor="@color/grey" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="40dp"
+        android:padding="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="190dp"
+            android:text="Total Harga : "
+            android:textColor="@color/main"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/price_total_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Harga"
+            android:textColor="@color/main"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/shapeableImageView"
         android:layout_width="75dp"
@@ -108,53 +200,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/btmBarRetail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/btmBarRetail" />
-
-    <Button
-        android:id="@+id/btnAction"
-        android:layout_width="60dp"
-        android:layout_height="67dp"
-        app:layout_constraintBottom_toBottomOf="@+id/btmBarRetail"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:backgroundTint="#ECB255"
-        android:layout_marginBottom="35dp"
-        android:textSize="25sp"/>
-
-
-    <ImageView
-        android:id="@+id/icon_cart"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@drawable/icon_cart"
-        android:layout_marginBottom="55dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:tint="@color/white"/>
-    <TextView
-        android:id="@+id/int_cart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-black"
-        android:text=""
-        android:textColor="#f51616"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/btmBarRetail"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textViewHistory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="This is History"
-        app:layout_constraintBottom_toTopOf="@+id/btmBarRetail"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
