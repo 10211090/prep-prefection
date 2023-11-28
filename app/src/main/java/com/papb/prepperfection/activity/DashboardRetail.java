@@ -61,7 +61,7 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
     Integer intCartValue = 0;
     ImageView historyActivity, notifActivity, settingActivity;
     Button btnAction, btnVegan, btnFruit, btnSpice;
-    Boolean bolBtnVegan = false, bolBtnFruit = false, bolBtnSpice = false;
+    Boolean bolBtnVegan = false, bolBtnFruit = false, bolBtnSpice = false,  valueListener;
 
 
     RecyclerView recyclerView;
@@ -595,21 +595,25 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
         cartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Carts carts = new Carts();
                 String userId = sharedPreferences.getString(KEY_ID,null);
                 mDatabase = FirebaseDatabase.getInstance().getReference("Carts");
+                valueListener = true;
                 mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()){
+                        if (snapshot.exists() && valueListener == true){
                             int count = (int) snapshot.getChildrenCount();
                             if (count > 0){
                                 mDatabase = FirebaseDatabase.getInstance().getReference("Carts").child(userId).child("CART00"+String.valueOf(count));
-                                Query query = mDatabase.orderByChild("statusItem").equalTo("Menunggu Pembayaran");
+                                Query query = mDatabase.child(String.valueOf(products.getIdProduk())).orderByChild("statusItem").equalTo("Menunggu Pembayaran");
                                 query.addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        if (snapshot.exists()){
+                                        int count = (int) snapshot.getChildrenCount();
+
+                                        if (snapshot.exists() && valueListener == true){
                                             carts.setUserId(userId);
                                             carts.setCartId("CART00"+String.valueOf(count));
                                             carts.setProductId(products.getIdProduk());
@@ -625,20 +629,23 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
                                             Date currentTime = Calendar.getInstance().getTime();
                                             carts.setTglItem(String.valueOf(currentTime));
 
-                                            mDatabase = FirebaseDatabase.getInstance().getReference("Carts").child(userId).child("CART00"+String.valueOf(count));
-                                            Query query = mDatabase.orderByChild("productId").equalTo(String.valueOf(products.getIdProduk()));
+                                            mDatabase = FirebaseDatabase.getInstance().getReference("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk());
+                                            Query query = mDatabase.orderByChild("productId").equalTo(products.getIdProduk());
                                             query.addValueEventListener(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    if (snapshot.exists()){
+                                                    if (snapshot.exists() && valueListener == true){
 
                                                         firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).child("qtyItem").setValue(String.valueOf(valueProduk.getText()));
                                                         firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).child("priceItem").setValue(String.valueOf(totalHargaItem));
+
+                                                        valueListener = false;
                                                         dialog.dismiss();
                                                         Toast.makeText(DashboardRetail.this,"Produk telah diupdate, "+products.getNamaProduk()+" dengan harga "+totalHarga.getText()+"  telah ditambahkan pada keranjang.",Toast.LENGTH_SHORT).show();
 
                                                     }else{
                                                         firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).setValue(carts);
+                                                        valueListener = false;
                                                         dialog.dismiss();
                                                         Toast.makeText(DashboardRetail.this,"Produk "+products.getNamaProduk()+" dengan harga "+totalHarga.getText()+"  telah ditambahkan pada keranjang.",Toast.LENGTH_SHORT).show();
                                                     }
@@ -668,6 +675,7 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
                                             carts.setTglItem(String.valueOf(currentTime));
 
                                             firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count+1)).child(products.getIdProduk()).setValue(carts);
+                                            valueListener = false;
                                             dialog.dismiss();
                                             Toast.makeText(DashboardRetail.this,"Produk "+products.getNamaProduk()+" dengan harga "+totalHarga.getText()+"  telah ditambahkan pada keranjang.",Toast.LENGTH_SHORT).show();
                                         }
@@ -697,6 +705,7 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
                                 carts.setTglItem(String.valueOf(currentTime));
 
                                 firebaseDatabase.getReference().child("Carts").child(userId).child("CART001").child(products.getIdProduk()).setValue(carts);
+                                valueListener = false;
                                 dialog.dismiss();
                                 Toast.makeText(DashboardRetail.this,"Produk "+products.getNamaProduk()+" dengan harga "+totalHarga.getText()+"  telah ditambahkan pada keranjang.",Toast.LENGTH_SHORT).show();
 

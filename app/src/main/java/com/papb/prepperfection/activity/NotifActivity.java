@@ -46,7 +46,7 @@ public class NotifActivity extends AppCompatActivity implements PopupMenu.OnMenu
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference mDatabase;
-    Integer intCartValue;
+    Integer intCartValue = 0;
     private static final String SHARED_PREF_NAME = "mypref";
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
@@ -168,9 +168,13 @@ public class NotifActivity extends AppCompatActivity implements PopupMenu.OnMenu
             @Override
             public void onClick(View v) {
 
-                dialog.dismiss();
-                Toast.makeText(NotifActivity.this,"Keranjang Belanja is clicked",Toast.LENGTH_SHORT).show();
-
+                if (intCartValue > 0){
+                    dialog.dismiss();
+                    startActivity(new Intent(NotifActivity.this, CartActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                }else{
+                    dialog.dismiss();
+                    Toast.makeText(NotifActivity.this,"Silahkan memasukkan Produk ke Keranjang Belanja terlebih dahulu",Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

@@ -50,7 +50,7 @@ public class CartActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     FirebaseDatabase firebaseDatabase;
     DatabaseReference mDatabase;
     Integer totalCartValue = 0;
-    Boolean bolBtnDisc1 = false, bolBtnDisc2= false;
+    Boolean bolBtnDisc1 = false, bolBtnDisc2= false, valueAdapter = false, btnCartAdapter = false;
     ImageView dashboardActivity, historyActivity, notifActivity, settingActivity;
     RecyclerView recyclerView;
     CartAdapter cartAdapter;
@@ -118,7 +118,62 @@ public class CartActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         Button disc1 = findViewById(R.id.btn25disc);
         Button disc2 = findViewById(R.id.btn50disc);
 
+        Button buyCart = findViewById(R.id.btnBuyCart);
+
         setCartAdapter();
+
+
+        buyCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (btnCartAdapter == false){
+                    valueAdapter=true;
+                    Carts carts = new Carts();
+                    String userId = sharedPreferences.getString(KEY_ID,null);
+                    mDatabase = FirebaseDatabase.getInstance().getReference("Carts");
+                    mDatabase.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                            if (snapshot.exists()){
+                                int count = (int) snapshot.getChildrenCount();
+                                mDatabase.child(userId).child("CART00"+String.valueOf(count)).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if (snapshot.exists()){
+                                                if (btnCartAdapter == false){
+                                                    btnCartAdapter = true;
+                                                    Integer cartDel = count+1;
+                                                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                                                        Carts carts1 = dataSnapshot.getValue(Carts.class);
+                                                        mDatabase.child(userId).child(String.valueOf(carts1.getCartId())).child(String.valueOf(carts1.getProductId())).child("statusItem").setValue("Sudah Dibayar");
+
+                                                    }
+
+                                                    Toast.makeText(CartActivity.this,"Keranjang Belanja berhasil di Belanja.",Toast.LENGTH_SHORT).show();
+                                                    startActivity(new Intent(CartActivity.this, DashboardRetail.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                                                }
+
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+        });
 
         disc1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,63 +245,66 @@ public class CartActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         });
     }
     public void setCartAdapter(){
-        String userId = sharedPreferences.getString(KEY_ID,null);
-        recyclerView = findViewById(R.id.cartList);
-        mDatabase = FirebaseDatabase.getInstance().getReference("Carts");
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        if (valueAdapter == false){
+            String userId = sharedPreferences.getString(KEY_ID,null);
+            recyclerView = findViewById(R.id.cartList);
+            mDatabase = FirebaseDatabase.getInstance().getReference("Carts");
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        list = new ArrayList<>();
-        cartAdapter = new CartAdapter(this,list);
-        recyclerView.setAdapter(cartAdapter);
+            list = new ArrayList<>();
+            cartAdapter = new CartAdapter(this,list);
+            recyclerView.setAdapter(cartAdapter);
 
-        mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
-                    int count = (int) snapshot.getChildrenCount();
-                    TextView idCart = findViewById(R.id.idCart);
-                    String idCartValue = userId + "CART00"+String.valueOf(count);
-                    idCart.setText("ID Pesanan : "+idCartValue.toUpperCase());
-                    Query query = mDatabase.child(userId).child("CART00"+String.valueOf(count)).orderByChild("statusItem").equalTo("Menunggu Pembayaran");
-                    query.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                                totalCartValue = totalCartValue + Integer.valueOf(dataSnapshot.child("priceItem").getValue().toString());
-                                Carts carts = dataSnapshot.getValue(Carts.class);
-                                list.add(carts);
+            mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()){
+                        int count = (int) snapshot.getChildrenCount();
+                        TextView idCart = findViewById(R.id.idCart);
+                        String idCartValue = userId + "CART00"+String.valueOf(count);
+                        idCart.setText("ID Pesanan : "+idCartValue.toUpperCase());
+                        Query query = mDatabase.child(userId).child("CART00"+String.valueOf(count)).orderByChild("statusItem").equalTo("Menunggu Pembayaran");
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                                    if (valueAdapter == false){
+                                        totalCartValue = totalCartValue + Integer.valueOf(dataSnapshot.child("priceItem").getValue().toString());
+                                        Carts carts = dataSnapshot.getValue(Carts.class);
+                                        list.add(carts);
+                                    }
+                                }
+
+                                cartAdapter.notifyDataSetChanged();
+                                NumberFormat format = NumberFormat.getCurrencyInstance();
+                                Locale locale = new Locale("in", "ID");
+                                format.setMaximumFractionDigits(0);
+                                format.setCurrency(Currency.getInstance(locale));
+
+                                TextView totalHargaCart = findViewById(R.id.price_total_cart);
+                                totalHargaCart.setText(format.format(Integer.valueOf(totalCartValue)));
+                                valueAdapter=true;
 
                             }
 
-                            cartAdapter.notifyDataSetChanged();
-                            NumberFormat format = NumberFormat.getCurrencyInstance();
-                            Locale locale = new Locale("in", "ID");
-                            format.setMaximumFractionDigits(0);
-                            format.setCurrency(Currency.getInstance(locale));
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
 
-                            TextView totalHargaCart = findViewById(R.id.price_total_cart);
-                            totalHargaCart.setText(format.format(Integer.valueOf(totalCartValue)));
+                            }
+                        });
 
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
+                    }
 
                 }
-                else{
-                    Toast.makeText(CartActivity.this,"Gak ada",Toast.LENGTH_SHORT).show();
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
                 }
-            }
+            });
+        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
     public void showProfile(View v){
         PopupMenu popUp = new PopupMenu(this, v);
