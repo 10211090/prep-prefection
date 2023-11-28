@@ -607,7 +607,7 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
                             int count = (int) snapshot.getChildrenCount();
                             if (count > 0){
                                 mDatabase = FirebaseDatabase.getInstance().getReference("Carts").child(userId).child("CART00"+String.valueOf(count));
-                                Query query = mDatabase.child(String.valueOf(products.getIdProduk())).orderByChild("statusItem").equalTo("Menunggu Pembayaran");
+                                Query query = mDatabase.orderByChild("statusItem").equalTo("Menunggu Pembayaran");
                                 query.addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -629,26 +629,29 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
                                             Date currentTime = Calendar.getInstance().getTime();
                                             carts.setTglItem(String.valueOf(currentTime));
 
-                                            mDatabase = FirebaseDatabase.getInstance().getReference("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk());
+                                            mDatabase = FirebaseDatabase.getInstance().getReference("Carts").child(userId).child("CART00"+String.valueOf(count));
                                             Query query = mDatabase.orderByChild("productId").equalTo(products.getIdProduk());
                                             query.addValueEventListener(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    if (snapshot.exists() && valueListener == true){
+                                                    int count = (int) snapshot.getChildrenCount();
+                                                    Toast.makeText(DashboardRetail.this, String.valueOf(count),Toast.LENGTH_SHORT).show();
 
-                                                        firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).child("qtyItem").setValue(String.valueOf(valueProduk.getText()));
-                                                        firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).child("priceItem").setValue(String.valueOf(totalHargaItem));
-
-                                                        valueListener = false;
-                                                        dialog.dismiss();
-                                                        Toast.makeText(DashboardRetail.this,"Produk telah diupdate, "+products.getNamaProduk()+" dengan harga "+totalHarga.getText()+"  telah ditambahkan pada keranjang.",Toast.LENGTH_SHORT).show();
-
-                                                    }else{
-                                                        firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).setValue(carts);
-                                                        valueListener = false;
-                                                        dialog.dismiss();
-                                                        Toast.makeText(DashboardRetail.this,"Produk "+products.getNamaProduk()+" dengan harga "+totalHarga.getText()+"  telah ditambahkan pada keranjang.",Toast.LENGTH_SHORT).show();
-                                                    }
+//                                                    if (snapshot.exists() && valueListener == true){
+//
+//                                                        firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).child("qtyItem").setValue(String.valueOf(valueProduk.getText()));
+//                                                        firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).child("priceItem").setValue(String.valueOf(totalHargaItem));
+//
+//                                                        valueListener = false;
+//                                                        dialog.dismiss();
+//                                                        Toast.makeText(DashboardRetail.this,"Produk telah diupdate, "+products.getNamaProduk()+" dengan harga "+totalHarga.getText()+"  telah ditambahkan pada keranjang.",Toast.LENGTH_SHORT).show();
+//
+//                                                    }else{
+//                                                        firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).setValue(carts);
+//                                                        valueListener = false;
+//                                                        dialog.dismiss();
+//                                                        Toast.makeText(DashboardRetail.this,"Produk "+products.getNamaProduk()+" dengan harga "+totalHarga.getText()+"  telah ditambahkan pada keranjang.",Toast.LENGTH_SHORT).show();
+//                                                    }
                                                 }
 
                                                 @Override
