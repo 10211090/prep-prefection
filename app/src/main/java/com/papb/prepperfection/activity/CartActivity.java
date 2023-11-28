@@ -48,13 +48,14 @@ public class CartActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     GoogleSignInClient mGoogleSignInClient;
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference mDatabase;
+    DatabaseReference mDatabase, mDatabaseOrder;
     Integer totalCartValue = 0;
     Boolean bolBtnDisc1 = false, bolBtnDisc2= false, valueAdapter = false, btnCartAdapter = false;
     ImageView dashboardActivity, historyActivity, notifActivity, settingActivity;
     RecyclerView recyclerView;
     CartAdapter cartAdapter;
     ArrayList<Carts> list;
+    String nameProductOrder = "";
 
     private static final String SHARED_PREF_NAME = "mypref";
     private static final String KEY_ID = "id";
@@ -140,13 +141,43 @@ public class CartActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                                 mDatabase.child(userId).child("CART00"+String.valueOf(count)).addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        int count = (int) snapshot.getChildrenCount();
                                         if (snapshot.exists()){
                                                 if (btnCartAdapter == false){
                                                     btnCartAdapter = true;
-                                                    Integer cartDel = count+1;
+
                                                     for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                                                         Carts carts1 = dataSnapshot.getValue(Carts.class);
+                                                        mDatabase.child(userId).child(String.valueOf(carts1.getCartId())).child(String.valueOf(carts1.getProductId())).child("statusItem").removeValue();
                                                         mDatabase.child(userId).child(String.valueOf(carts1.getCartId())).child(String.valueOf(carts1.getProductId())).child("statusItem").setValue("Sudah Dibayar");
+
+//                                                        nameProductOrder = nameProductOrder+", "+carts1.getProductId();
+//                                                        mDatabaseOrder = FirebaseDatabase.getInstance().getReference().child("Orders");
+//                                                        Query query = mDatabaseOrder.child(userId);
+//                                                        mDatabaseOrder.addValueEventListener(new ValueEventListener() {
+//                                                            @Override
+//                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                                                for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                                                                    if(dataSnapshot.hasChild(userId)) {
+//                                                                         int count = (int) snapshot.getChildrenCount();
+//                                                                        Toast.makeText(CartActivity.this,String.valueOf(count),Toast.LENGTH_SHORT).show();
+//
+//                                                                    } else {
+//                                                                        Toast.makeText(CartActivity.this,"0",Toast.LENGTH_SHORT).show();
+//
+//                                                                    }
+//                                                                }
+//
+//
+//
+//
+//                                                            }
+//
+//                                                            @Override
+//                                                            public void onCancelled(@NonNull DatabaseError error) {
+//
+//                                                            }
+//                                                        });
 
                                                     }
 

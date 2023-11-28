@@ -2,6 +2,8 @@ package com.papb.prepperfection.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -35,7 +37,13 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.papb.prepperfection.MainActivity;
 import com.papb.prepperfection.R;
+import com.papb.prepperfection.adapter.HistoryAdapter;
+import com.papb.prepperfection.group.Carts;
+import com.papb.prepperfection.group.Products;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+
 
 public class HistoryActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
 
@@ -47,6 +55,12 @@ public class HistoryActivity extends AppCompatActivity implements PopupMenu.OnMe
     FirebaseDatabase firebaseDatabase;
     DatabaseReference mDatabase;
     Integer intCartValue = 0;
+    RecyclerView recyclerView;
+    HistoryAdapter historyAdapter;
+    ArrayList<Carts> list;
+    String userId;
+    int valCart;
+    String cartID = null;
     private static final String SHARED_PREF_NAME = "mypref";
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
@@ -116,6 +130,8 @@ public class HistoryActivity extends AppCompatActivity implements PopupMenu.OnMe
 
             }
         });
+
+        setDataHistoryAdapter();
 
         DashboardActivity = findViewById(R.id.homeIcoHistory);
         notifActivity = findViewById(R.id.notifIcoHistory);
@@ -242,4 +258,89 @@ public class HistoryActivity extends AppCompatActivity implements PopupMenu.OnMe
         }
         return false;
     }
+
+    public void setDataHistoryAdapter(){
+        Carts carts = new Carts();
+        String userId = sharedPreferences.getString(KEY_ID,null);
+        recyclerView = findViewById(R.id.historyList);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mDatabase = FirebaseDatabase.getInstance().getReference("Carts");
+        list = new ArrayList<>();
+        historyAdapter = new HistoryAdapter(this,list);
+        recyclerView.setAdapter(historyAdapter);
+        mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                int count = (int) snapshot.getChildrenCount();
+                if (count > 0){
+                    valCart = 0;
+
+                    //Get Data USER
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                        valCart = valCart+1;
+
+                        cartID = "CART00"+String.valueOf(valCart+1);
+                        carts.setCartId(cartID);
+
+                        list.add(carts);
+
+                        mDatabase = FirebaseDatabase.getInstance().getReference("Carts").child(userId).child("CART00"+String.valueOf(valCart));
+                        mDatabase.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                //Get Data CART
+                                for (DataSnapshot dataSnapshot1 : snapshot.getChildren()){
+
+                                    mDatabase = FirebaseDatabase.getInstance().getReference("Carts").child(userId).child("CART00"+String.valueOf(valCart));
+                                    Query query = mDatabase.orderByChild("statusItem").equalTo("Sudah Dibayar");
+                                    query.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                            //Get Data PRODUCT
+                                            for (DataSnapshot dataSnapshot2 : snapshot.getChildren()){
+
+                                            }
+                                            historyAdapter.notifyDataSetChanged();
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+                   }
+                }else{
+                    //int count = (int) snapshot.getChildrenCount();
+                    //Toast.makeText(HistoryActivity.this,String.valueOf(count),Toast.LENGTH_SHORT).show();
+
+                    Toast.makeText(HistoryActivity.this,"Tidak ada data History",Toast.LENGTH_SHORT).show();
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 }

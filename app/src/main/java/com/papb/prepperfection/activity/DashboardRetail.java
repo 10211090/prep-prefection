@@ -61,7 +61,7 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
     Integer intCartValue = 0;
     ImageView historyActivity, notifActivity, settingActivity;
     Button btnAction, btnVegan, btnFruit, btnSpice;
-    Boolean bolBtnVegan = false, bolBtnFruit = false, bolBtnSpice = false,  valueListener;
+    Boolean bolBtnVegan = false, bolBtnFruit = false, bolBtnSpice = false,  valueListener=false;
 
 
     RecyclerView recyclerView;
@@ -595,7 +595,6 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
         cartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Carts carts = new Carts();
                 String userId = sharedPreferences.getString(KEY_ID,null);
                 mDatabase = FirebaseDatabase.getInstance().getReference("Carts");
@@ -603,7 +602,7 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
                 mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists() && valueListener == true){
+                        if (valueListener == true){
                             int count = (int) snapshot.getChildrenCount();
                             if (count > 0){
                                 mDatabase = FirebaseDatabase.getInstance().getReference("Carts").child(userId).child("CART00"+String.valueOf(count));
@@ -611,7 +610,6 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
                                 query.addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        int count = (int) snapshot.getChildrenCount();
 
                                         if (snapshot.exists() && valueListener == true){
                                             carts.setUserId(userId);
@@ -634,24 +632,26 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
                                             query.addValueEventListener(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    int count = (int) snapshot.getChildrenCount();
-                                                    Toast.makeText(DashboardRetail.this, String.valueOf(count),Toast.LENGTH_SHORT).show();
 
-//                                                    if (snapshot.exists() && valueListener == true){
-//
-//                                                        firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).child("qtyItem").setValue(String.valueOf(valueProduk.getText()));
-//                                                        firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).child("priceItem").setValue(String.valueOf(totalHargaItem));
-//
-//                                                        valueListener = false;
-//                                                        dialog.dismiss();
-//                                                        Toast.makeText(DashboardRetail.this,"Produk telah diupdate, "+products.getNamaProduk()+" dengan harga "+totalHarga.getText()+"  telah ditambahkan pada keranjang.",Toast.LENGTH_SHORT).show();
-//
-//                                                    }else{
-//                                                        firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).setValue(carts);
-//                                                        valueListener = false;
-//                                                        dialog.dismiss();
-//                                                        Toast.makeText(DashboardRetail.this,"Produk "+products.getNamaProduk()+" dengan harga "+totalHarga.getText()+"  telah ditambahkan pada keranjang.",Toast.LENGTH_SHORT).show();
-//                                                    }
+                                                    if (snapshot.exists() && valueListener == true){
+
+                                                        firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).child("qtyItem").removeValue();
+                                                        firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).child("priceItem").removeValue();
+                                                        firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).child("tglItem").removeValue();
+                                                        firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).child("qtyItem").setValue(String.valueOf(valueProduk.getText()));
+                                                        firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).child("priceItem").setValue(String.valueOf(totalHargaItem));
+                                                        firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).child("tglItem").setValue(String.valueOf(currentTime));
+
+                                                        valueListener = false;
+                                                        dialog.dismiss();
+                                                        Toast.makeText(DashboardRetail.this,"Produk telah diupdate, "+products.getNamaProduk()+" dengan harga "+totalHarga.getText()+"  telah ditambahkan pada keranjang.",Toast.LENGTH_SHORT).show();
+
+                                                    }if (snapshot.exists() == false && valueListener == true){
+                                                        firebaseDatabase.getReference().child("Carts").child(userId).child("CART00"+String.valueOf(count)).child(products.getIdProduk()).setValue(carts);
+                                                        valueListener = false;
+                                                        dialog.dismiss();
+                                                        Toast.makeText(DashboardRetail.this,"Produk "+products.getNamaProduk()+" dengan harga "+totalHarga.getText()+"  telah ditambahkan pada keranjang.",Toast.LENGTH_SHORT).show();
+                                                    }
                                                 }
 
                                                 @Override
@@ -661,7 +661,7 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
                                             });
 
                                         }
-                                        else{
+                                        if (snapshot.exists() == false && valueListener == true){
                                             carts.setUserId(userId);
                                             carts.setCartId("CART00"+String.valueOf(count+1));
                                             carts.setProductId(products.getIdProduk());
@@ -691,7 +691,7 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
                                     }
                                 });
 
-                            }else{
+                            }if (valueListener == true){
                                 carts.setUserId(userId);
                                 carts.setCartId("CART001");
                                 carts.setProductId(products.getIdProduk());

@@ -128,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                     }
                                     else {
-                                        firebaseDatabase.getReference().child("Carts").child(user.getUid());
+                                        firebaseDatabase.getReference().child("Carts").child(String.valueOf(user.getUid())).setValue(null);
                                     }
                                 }
 
@@ -137,6 +137,23 @@ public class LoginActivity extends AppCompatActivity {
 
                                 }
                             });
+                            firebaseDatabase.getReference().child("Orders").child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()){
+
+                                    }
+                                    else {
+                                        firebaseDatabase.getReference().child("Orders").child(user.getUid()).setValue(null);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
 
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString(KEY_ID, user.getUid().toString());
