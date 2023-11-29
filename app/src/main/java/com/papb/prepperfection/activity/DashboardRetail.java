@@ -41,8 +41,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.papb.prepperfection.MainActivity;
 import com.papb.prepperfection.R;
 import com.papb.prepperfection.adapter.ProductAdapter;
+import com.papb.prepperfection.adapter.ResepAdapter;
 import com.papb.prepperfection.group.Carts;
 import com.papb.prepperfection.group.Products;
+import com.papb.prepperfection.group.Reseps;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
@@ -67,6 +69,7 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
     RecyclerView recyclerView;
     ProductAdapter productAdapter;
     ArrayList<Products> list;
+
     private static final String SHARED_PREF_NAME = "mypref";
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
@@ -310,7 +313,8 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
             public void onClick(View v) {
 
                 dialog.dismiss();
-                Toast.makeText(DashboardRetail.this,"Rekomendasi Resep is Clicked",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(DashboardRetail.this, ResepActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+
 
             }
         });
@@ -337,6 +341,51 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
         dialog.getWindow().setGravity(Gravity.BOTTOM);
 
     }
+//    public void showResepDialog() {
+//        final Dialog dialog = new Dialog(this);
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        dialog.setContentView(R.layout.activity_resep);
+//        ImageView cancelButton = dialog.findViewById(R.id.cancelButton);
+//
+//        recyclerViewResep = findViewById(R.id.resepList);
+//        mDatabase = FirebaseDatabase.getInstance().getReference("Resep");
+////        recyclerViewResep.setHasFixedSize(true);
+////        recyclerViewResep.setLayoutManager(new LinearLayoutManager(this));
+//
+//        listResep = new ArrayList<>();
+//        resepAdapter = new ResepAdapter(this,listResep);
+//        recyclerViewResep.setAdapter(resepAdapter);
+////
+////        mDatabase.addValueEventListener(new ValueEventListener() {
+////            @Override
+////            public void onDataChange(@NonNull DataSnapshot snapshot) {
+////                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+////                    Reseps reseps = dataSnapshot.getValue(Reseps.class);
+////                    listResep.add(reseps);
+////
+////                }
+////                resepAdapter.notifyDataSetChanged();
+////            }
+////
+////            @Override
+////            public void onCancelled(@NonNull DatabaseError error) {
+////
+////            }
+////        });
+//
+//        cancelButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                dialog.dismiss();
+//            }
+//        });
+//
+//        dialog.show();
+//        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+//        dialog.getWindow().setGravity(Gravity.BOTTOM);
+//    }
     private void showPromoDialog() {
 
         final Dialog dialog = new Dialog(this);

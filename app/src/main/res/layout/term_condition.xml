@@ -49,24 +49,47 @@
 
 
     <LinearLayout
-        android:id="@+id/layoutTxtTerm"
+        android:id="@+id/layoutTxtTentangKami"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="25dp"
         android:layout_marginTop="10dp"
         android:padding="10dp">
 
         <TextView
-            android:id="@+id/txtTerm"
+            android:id="@+id/txtTentangKami"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Isi text"
+            android:text="Syarat dan Ketentuan (“Syarat dan Ketentuan”) ini dan segala peraturan atau kebijakan lain yang tersedia pada aplikasi Prep Prefection merupakan perjanjian-perjanjian yang mengikat berdasarkan Hukum yang Berlaku antara Pengguna dan Institut Teknologi Kalimantan (ITK)"
             android:textColor="@color/main"
             android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             android:textSize="16sp"/>
 
+
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutTxtTentangKami"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/txtTentangKami"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kami mewajibkan Anda untuk membaca seluruh isi Perjanjian dan apabila Anda memiliki pertanyaan apapun mengenai Perjanjian, Anda dapat menghubungi Kami melalui admin@prep-prefection.com"
+            android:textColor="@color/main"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:textSize="16sp"/>
+
+
+    </LinearLayout>
+
 
 
 </LinearLayout>

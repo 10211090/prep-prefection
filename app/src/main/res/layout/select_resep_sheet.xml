@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="viewStart"
-            android:text="Tentang Kami"
+            android:text="Rekomendasi Resep"
             android:padding="8dp"
             android:textColor="@color/main"
             android:layout_marginStart="12dp"
@@ -49,66 +50,112 @@
 
 
     <LinearLayout
-        android:id="@+id/layoutTxtTentangKami"
+        android:id="@+id/layoutCart"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginTop="10dp"
+        android:padding="15dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/img_select_resep"
+            android:src="@drawable/logo_landscape"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:padding="10dp">
 
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/ic_name_product"
+            app:tint="@color/main" />
+
         <TextView
-            android:id="@+id/txtTentangKami"
+            android:id="@+id/name_select_resep"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Aplikasi Prep Prefection dibuat oleh Kelompok Mahasiswa dari Mata Kuliah Pemrograman Aplikasi Perangkat Bergerak."
+            android:text="Nama Produk"
             android:textColor="@color/main"
             android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/ic_category_product"
+            app:tint="@color/main" />
+
+        <TextView
+            android:id="@+id/category_select_resep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kategori Produk"
+            android:textColor="@color/main"
+            android:layout_marginLeft="30dp"
             android:textSize="16sp"/>
-
-
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/layoutTxtTentangKami"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:padding="10dp">
 
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/ic_material_product"
+            app:tint="@color/main" />
         <TextView
-            android:id="@+id/txtTentangKami"
+            android:id="@+id/material_select_resep"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dibuat Oleh (Kelompok Trio Maniez) Yulia Al Zahrah Putri, Nur Alfa Della, dan
-Dinda Saadatul Hijrah."
+            android:text="Bahan Produk"
             android:textColor="@color/main"
             android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:textSize="16sp"/>
+            android:textSize="12sp"/>
 
-
-    </LinearLayout>
+        </LinearLayout>
     <LinearLayout
-        android:id="@+id/layoutTxtTentangKami2"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:padding="10dp">
 
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/ic_how_product"
+            app:tint="@color/main" />
         <TextView
-            android:id="@+id/txtTentangKami3"
+            android:id="@+id/how_select_resep"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Copyright 2023 by Prep Prefection"
+            android:text="Cara buat Product"
             android:textColor="@color/main"
             android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:textSize="16sp"/>
-
+            android:textSize="12sp"/>
 
     </LinearLayout>
+
 
 
 </LinearLayout>

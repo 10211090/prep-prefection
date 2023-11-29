@@ -201,7 +201,7 @@ public class HistoryActivity extends AppCompatActivity implements PopupMenu.OnMe
             public void onClick(View v) {
 
                 dialog.dismiss();
-                Toast.makeText(HistoryActivity.this,"Rekomendasi Resep is Clicked",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(HistoryActivity.this, ResepActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
 
             }
         });
@@ -210,8 +210,51 @@ public class HistoryActivity extends AppCompatActivity implements PopupMenu.OnMe
             @Override
             public void onClick(View v) {
 
+                showPromoDialog();
+
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 dialog.dismiss();
-                Toast.makeText(HistoryActivity.this,"Voucher Promo is Clicked",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
+
+    }
+    private void showPromoDialog() {
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.activity_promo);
+
+        LinearLayout promo1 = dialog.findViewById(R.id.layoutPromo1);
+        LinearLayout promo2 = dialog.findViewById(R.id.layoutPromo2);
+        ImageView cancelButton = dialog.findViewById(R.id.cancelButton);
+
+        promo1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+                Toast.makeText(HistoryActivity.this,"25% Discount telah di klaim dan sedang digunakan",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        promo2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+                Toast.makeText(HistoryActivity.this,"25% Discount telah di klaim dan sedang digunakan",Toast.LENGTH_SHORT).show();
 
             }
         });

@@ -2,6 +2,8 @@ package com.papb.prepperfection.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -18,7 +20,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,32 +37,42 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.papb.prepperfection.MainActivity;
 import com.papb.prepperfection.R;
+import com.papb.prepperfection.adapter.ProductAdapter;
+import com.papb.prepperfection.adapter.ResepAdapter;
+import com.papb.prepperfection.group.Carts;
+import com.papb.prepperfection.group.Products;
+import com.papb.prepperfection.group.Reseps;
 import com.squareup.picasso.Picasso;
 
-import java.util.Set;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Currency;
+import java.util.Date;
+import java.util.Locale;
 
-public class SettingActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
+public class ResepActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
-    ImageView DashboardActivity, historyActivity, notifActivity;
-    TableRow tblTentang, tblTerm;
-    Button btnAction;
-    Button btnLogout;
     SharedPreferences sharedPreferences;
     GoogleSignInClient mGoogleSignInClient;
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference mDatabase;
+    DatabaseReference mDatabase, mDatabaseOrder;
     Integer intCartValue = 0;
+    ImageView dashboardActivity, historyActivity, notifActivity, settingActivity;
+    Button btnAction;
+    RecyclerView recyclerView;
+    ResepAdapter resepAdapter;
+    ArrayList<Reseps> list;
     private static final String SHARED_PREF_NAME = "mypref";
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PROFILE = "profile";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
+        setContentView(R.layout.activity_resep);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -75,23 +86,49 @@ public class SettingActivity extends AppCompatActivity implements PopupMenu.OnMe
 
         sharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
 
-        TextView NameAccount, EmailAccount;
-        NameAccount = findViewById(R.id.nameProfileSetting);
-        NameAccount.setText(sharedPreferences.getString(KEY_NAME,null));
-
-        EmailAccount = findViewById(R.id.emailProfileSetting);
-        EmailAccount.setText(sharedPreferences.getString(KEY_EMAIL,null));
-
-        ImageView ImgProfile,ImgProfileMenu;
-        ImgProfile = findViewById(R.id.imgProfileSetting);
-        ImgProfileMenu = findViewById(R.id.imgProfileSettingMenu);
-
+        ImageView ImgProfile;
+        ImgProfile = findViewById(R.id.imgProfileResep);
 
         String profileUrl = sharedPreferences.getString(KEY_PROFILE,null);
-        Picasso.with(SettingActivity.this).load(profileUrl).into(ImgProfile);
-        Picasso.with(SettingActivity.this).load(profileUrl).into(ImgProfileMenu);
-
+        Picasso.with(ResepActivity.this).load(profileUrl).into(ImgProfile);
         TextView intCart = findViewById(R.id.int_cart);
+
+        dashboardActivity = findViewById(R.id.homeIcoResep);
+        historyActivity = findViewById(R.id.historyIcoResep);
+        notifActivity = findViewById(R.id.notifIcoResep);
+        settingActivity = findViewById(R.id.settingIcoResep);
+        btnAction = findViewById(R.id.btnAction);
+
+        dashboardActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ResepActivity.this, DashboardRetail.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+            }
+        });
+        historyActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ResepActivity.this, HistoryActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+            }
+        });
+        notifActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ResepActivity.this, NotifActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+            }
+        });
+        settingActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ResepActivity.this, SettingActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+            }
+        });
+        btnAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showBottomDialog();
+            }
+        });
 
         mDatabase = firebaseDatabase.getReference("Carts").child(String.valueOf(sharedPreferences.getString(KEY_ID,null)));
         Query query = mDatabase;
@@ -133,73 +170,9 @@ public class SettingActivity extends AppCompatActivity implements PopupMenu.OnMe
             }
         });
 
-        DashboardActivity = findViewById(R.id.homeIcoSetting);
-        historyActivity = findViewById(R.id.historyIcoSetting);
-        notifActivity = findViewById(R.id.notifIcoSetting);
-        btnLogout = findViewById(R.id.btnLogout);
-        btnAction = findViewById(R.id.btnAction);
-        tblTentang = findViewById(R.id.tblTentang);
-        tblTerm = findViewById(R.id.tblTerm);
-
-        DashboardActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SettingActivity.this, DashboardRetail.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
-            }
-        });
-        historyActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SettingActivity.this, HistoryActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
-            }
-        });
-        notifActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SettingActivity.this, NotifActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
-            }
-        });
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mGoogleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString(KEY_NAME, null);
-                        editor.putString(KEY_EMAIL, null);
-                        editor.putString(KEY_PROFILE, null);
-                        editor.apply();
-
-                        firebaseAuth.signOut();
-
-                        startActivity(new Intent(SettingActivity.this, MainActivity.class));
-                        finish();
-                    }
-                });
-            }
-        });
-        btnAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showBottomDialog();
-            }
-        });
-        tblTentang.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showTentang();
-            }
-        });
-        tblTerm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showTerm();
-            }
-        });
+        showResepDialog();
 
     }
-
     private void showBottomDialog() {
 
         final Dialog dialog = new Dialog(this);
@@ -222,10 +195,10 @@ public class SettingActivity extends AppCompatActivity implements PopupMenu.OnMe
 
                 if (intCartValue > 0){
                     dialog.dismiss();
-                    startActivity(new Intent(SettingActivity.this, CartActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                    startActivity(new Intent(ResepActivity.this, CartActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 }else{
                     dialog.dismiss();
-                    Toast.makeText(SettingActivity.this,"Silahkan memasukkan Produk ke Keranjang Belanja terlebih dahulu",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ResepActivity.this,"Silahkan memasukkan Produk ke Keranjang Belanja terlebih dahulu",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -235,7 +208,7 @@ public class SettingActivity extends AppCompatActivity implements PopupMenu.OnMe
             public void onClick(View v) {
 
                 dialog.dismiss();
-                startActivity(new Intent(SettingActivity.this, ResepActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                startActivity(new Intent(ResepActivity.this, ResepActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
 
             }
         });
@@ -248,51 +221,6 @@ public class SettingActivity extends AppCompatActivity implements PopupMenu.OnMe
 
             }
         });
-
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-        dialog.getWindow().setGravity(Gravity.BOTTOM);
-
-    }
-
-    private void showTentang() {
-
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.tentang_kami);
-
-        ImageView cancelButton = dialog.findViewById(R.id.cancelButton);
-
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-        dialog.getWindow().setGravity(Gravity.BOTTOM);
-
-    }
-    private void showTerm() {
-
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.term_condition);
-
-        ImageView cancelButton = dialog.findViewById(R.id.cancelButton);
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -323,7 +251,7 @@ public class SettingActivity extends AppCompatActivity implements PopupMenu.OnMe
             public void onClick(View v) {
 
                 dialog.dismiss();
-                Toast.makeText(SettingActivity.this,"25% Discount telah di klaim dan sedang digunakan",Toast.LENGTH_SHORT).show();
+                Toast.makeText(ResepActivity.this,"25% Discount telah di klaim dan sedang digunakan",Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -333,7 +261,7 @@ public class SettingActivity extends AppCompatActivity implements PopupMenu.OnMe
             public void onClick(View v) {
 
                 dialog.dismiss();
-                Toast.makeText(SettingActivity.this,"25% Discount telah di klaim dan sedang digunakan",Toast.LENGTH_SHORT).show();
+                Toast.makeText(ResepActivity.this,"25% Discount telah di klaim dan sedang digunakan",Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -374,12 +302,63 @@ public class SettingActivity extends AppCompatActivity implements PopupMenu.OnMe
 
                     firebaseAuth.signOut();
 
-                    startActivity(new Intent(SettingActivity.this,MainActivity.class));
+                    startActivity(new Intent(ResepActivity.this, MainActivity.class));
                     finish();
                 }
             });
         }
         return false;
     }
+    public void showResepDialog() {
+        recyclerView = findViewById(R.id.resepList);
+        mDatabase = FirebaseDatabase.getInstance().getReference("Resep");
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        list = new ArrayList<>();
+        resepAdapter = new ResepAdapter(this,list);
+        recyclerView.setAdapter(resepAdapter);
+        resepAdapter.setOnItemClickCallback(this::showSelectedResep);
+
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    Reseps reseps = dataSnapshot.getValue(Reseps.class);
+                    list.add(reseps);
+
+                }
+                resepAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+    private void showSelectedResep(Reseps reseps) {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.select_resep_sheet);
+
+        TextView namaResep = dialog.findViewById(R.id.name_select_resep);
+        TextView kategoriResep = dialog.findViewById(R.id.category_select_resep);
+        TextView bahanResep = dialog.findViewById(R.id.material_select_resep);
+        TextView buatResep = dialog.findViewById(R.id.how_select_resep);
+        ImageView imgResep = dialog.findViewById(R.id.img_select_resep);
+
+        namaResep.setText(reseps.getNamaResep());
+        kategoriResep.setText(reseps.getJenisResep());
+        bahanResep.setText(reseps.getBahanResep());
+        buatResep.setText(reseps.getBuatResep());
+        Picasso.with(this).load(reseps.getFotoResep()).into(imgResep);
+
+        dialog.show();
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
+    }
 }
