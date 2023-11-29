@@ -39,6 +39,7 @@ import com.papb.prepperfection.MainActivity;
 import com.papb.prepperfection.R;
 import com.papb.prepperfection.adapter.HistoryAdapter;
 import com.papb.prepperfection.group.Carts;
+import com.papb.prepperfection.group.Historys;
 import com.papb.prepperfection.group.Products;
 import com.squareup.picasso.Picasso;
 
@@ -57,7 +58,7 @@ public class HistoryActivity extends AppCompatActivity implements PopupMenu.OnMe
     Integer intCartValue = 0;
     RecyclerView recyclerView;
     HistoryAdapter historyAdapter;
-    ArrayList<Carts> list;
+    ArrayList<Historys> list;
     String userId;
     int valCart;
     String cartID = null;
@@ -260,80 +261,32 @@ public class HistoryActivity extends AppCompatActivity implements PopupMenu.OnMe
     }
 
     public void setDataHistoryAdapter(){
-        Carts carts = new Carts();
         String userId = sharedPreferences.getString(KEY_ID,null);
         recyclerView = findViewById(R.id.historyList);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("Carts");
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Orders");
         list = new ArrayList<>();
         historyAdapter = new HistoryAdapter(this,list);
         recyclerView.setAdapter(historyAdapter);
+
         mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                 int count = (int) snapshot.getChildrenCount();
-                if (count > 0){
-                    valCart = 0;
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (count > 0){
+                        Historys historys = dataSnapshot.getValue(Historys.class);
+                        list.add(historys);
 
-                    //Get Data USER
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                        }else{
+                            TextView noHistory = findViewById(R.id.txtNoHistory);
+                            noHistory.setText("Tidak ada Data History");
+                        }
 
-                        valCart = valCart+1;
-
-                        cartID = "CART00"+String.valueOf(valCart+1);
-                        carts.setCartId(cartID);
-
-                        list.add(carts);
-
-                        mDatabase = FirebaseDatabase.getInstance().getReference("Carts").child(userId).child("CART00"+String.valueOf(valCart));
-                        mDatabase.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                                //Get Data CART
-                                for (DataSnapshot dataSnapshot1 : snapshot.getChildren()){
-
-                                    mDatabase = FirebaseDatabase.getInstance().getReference("Carts").child(userId).child("CART00"+String.valueOf(valCart));
-                                    Query query = mDatabase.orderByChild("statusItem").equalTo("Sudah Dibayar");
-                                    query.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                                            //Get Data PRODUCT
-                                            for (DataSnapshot dataSnapshot2 : snapshot.getChildren()){
-
-                                            }
-                                            historyAdapter.notifyDataSetChanged();
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-
-                                        }
-                                    });
-
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-
-                   }
-                }else{
-                    //int count = (int) snapshot.getChildrenCount();
-                    //Toast.makeText(HistoryActivity.this,String.valueOf(count),Toast.LENGTH_SHORT).show();
-
-                    Toast.makeText(HistoryActivity.this,"Tidak ada data History",Toast.LENGTH_SHORT).show();
-
+                historyAdapter.notifyDataSetChanged();
                 }
-
-
             }
 
             @Override
@@ -341,6 +294,7 @@ public class HistoryActivity extends AppCompatActivity implements PopupMenu.OnMe
 
             }
         });
+
     }
 
 }

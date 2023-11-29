@@ -40,7 +40,9 @@ import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Currency;
+import java.util.Date;
 import java.util.Locale;
 
 public class CartActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
@@ -50,12 +52,14 @@ public class CartActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     FirebaseDatabase firebaseDatabase;
     DatabaseReference mDatabase, mDatabaseOrder;
     Integer totalCartValue = 0;
-    Boolean bolBtnDisc1 = false, bolBtnDisc2= false, valueAdapter = false, btnCartAdapter = false;
+    Boolean bolBtnDisc1 = false, bolBtnDisc2= false, valueAdapter = false, valueAdapter2 = false, btnCartAdapter = false;
     ImageView dashboardActivity, historyActivity, notifActivity, settingActivity;
     RecyclerView recyclerView;
     CartAdapter cartAdapter;
     ArrayList<Carts> list;
+    String idProductOrder = "";
     String nameProductOrder = "";
+    Integer totalHargaOrder = 0;
 
     private static final String SHARED_PREF_NAME = "mypref";
     private static final String KEY_ID = "id";
@@ -151,35 +155,48 @@ public class CartActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                                                         mDatabase.child(userId).child(String.valueOf(carts1.getCartId())).child(String.valueOf(carts1.getProductId())).child("statusItem").removeValue();
                                                         mDatabase.child(userId).child(String.valueOf(carts1.getCartId())).child(String.valueOf(carts1.getProductId())).child("statusItem").setValue("Sudah Dibayar");
 
-//                                                        nameProductOrder = nameProductOrder+", "+carts1.getProductId();
-//                                                        mDatabaseOrder = FirebaseDatabase.getInstance().getReference().child("Orders");
-//                                                        Query query = mDatabaseOrder.child(userId);
-//                                                        mDatabaseOrder.addValueEventListener(new ValueEventListener() {
-//                                                            @Override
-//                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                                                for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                                                                    if(dataSnapshot.hasChild(userId)) {
-//                                                                         int count = (int) snapshot.getChildrenCount();
-//                                                                        Toast.makeText(CartActivity.this,String.valueOf(count),Toast.LENGTH_SHORT).show();
-//
-//                                                                    } else {
-//                                                                        Toast.makeText(CartActivity.this,"0",Toast.LENGTH_SHORT).show();
-//
-//                                                                    }
-//                                                                }
-//
-//
-//
-//
-//                                                            }
-//
-//                                                            @Override
-//                                                            public void onCancelled(@NonNull DatabaseError error) {
-//
-//                                                            }
-//                                                        });
+                                                        idProductOrder = idProductOrder+", "+carts1.getProductId();
+                                                        nameProductOrder = nameProductOrder+", "+carts1.getNameItem();
+                                                        int getHarga = Integer.valueOf(carts1.getPriceItem());
+                                                        totalHargaOrder = Integer.valueOf(totalHargaOrder+ getHarga);
+
+
 
                                                     }
+                                                    mDatabaseOrder = FirebaseDatabase.getInstance().getReference().child("Orders");
+                                                    mDatabaseOrder.child(userId).addValueEventListener(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                if(valueAdapter2 == false) {
+                                                                    int count = (int) snapshot.getChildrenCount();
+
+                                                                    if (bolBtnDisc1 == true){
+                                                                        totalHargaOrder = (totalHargaOrder*75)/100;
+                                                                    }
+                                                                    if (bolBtnDisc2 == true){
+                                                                        totalHargaOrder = (totalHargaOrder*50)/100;
+                                                                    }
+                                                                    Date currentTime = Calendar.getInstance().getTime();
+                                                                    mDatabaseOrder.child(userId).child("ORDER00"+String.valueOf(count+1)).child("orderId").setValue("ORDER00"+String.valueOf(count+1));
+                                                                    mDatabaseOrder.child(userId).child("ORDER00"+String.valueOf(count+1)).child("cartId").setValue(carts.getCartId());
+                                                                    mDatabaseOrder.child(userId).child("ORDER00"+String.valueOf(count+1)).child("userId").setValue(userId);
+                                                                    mDatabaseOrder.child(userId).child("ORDER00"+String.valueOf(count+1)).child("productId").setValue(idProductOrder);
+                                                                    mDatabaseOrder.child(userId).child("ORDER00"+String.valueOf(count+1)).child("nameProduct").setValue(nameProductOrder);
+                                                                    mDatabaseOrder.child(userId).child("ORDER00"+String.valueOf(count+1)).child("priceOrder").setValue(String.valueOf(totalHargaOrder));
+                                                                    mDatabaseOrder.child(userId).child("ORDER00"+String.valueOf(count+1)).child("tglOrder").setValue(String.valueOf(currentTime));
+
+                                                                }
+                                                                valueAdapter2 = true;
+
+
+
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                        }
+                                                    });
 
                                                     Toast.makeText(CartActivity.this,"Keranjang Belanja berhasil di Belanja.",Toast.LENGTH_SHORT).show();
                                                     startActivity(new Intent(CartActivity.this, DashboardRetail.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));

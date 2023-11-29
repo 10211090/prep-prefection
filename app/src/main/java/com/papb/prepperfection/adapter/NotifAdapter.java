@@ -32,36 +32,39 @@ import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
-public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHolder> {
+public class NotifAdapter extends RecyclerView.Adapter<NotifAdapter.MyViewHolder> {
     Context context;
-    ArrayList<Historys> list;
+    ArrayList<Carts> list;
 
-    public HistoryAdapter(Context context, ArrayList<Historys> list){
+    public NotifAdapter(Context context, ArrayList<Carts> list){
         this.context = context;
         this.list = list;
     }
 
     @NonNull
     @Override
-    public HistoryAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.history, parent, false);
+    public NotifAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(context).inflate(R.layout.notif, parent, false);
         return new MyViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull HistoryAdapter.MyViewHolder holder, int position) {
-        Historys historys = list.get(position);
+    public void onBindViewHolder(@NonNull NotifAdapter.MyViewHolder holder, int position) {
+        Carts carts = list.get(position);
 
         NumberFormat format = NumberFormat.getCurrencyInstance();
         Locale locale = new Locale("in", "ID");
         format.setMaximumFractionDigits(0);
         format.setCurrency(Currency.getInstance(locale));
 
-
-
-        holder.txtHistory.setText("Pesanan dengan ID "+historys.getOrderId()+" terdiri dari"+historys.getNameProduct()+" dengan harga "+format.format(Integer.valueOf(historys.getPriceOrder())));
-        holder.tglHistory.setText(historys.getTglOrder());
-
+        holder.tglNotif.setText(carts.getTglItem());
+        if (carts.getStatusItem().equals("Menunggu Pembayaran")){
+            holder.imgNotif.setImageResource(R.drawable.ic_not_succes);
+            holder.txtNotif.setText("Produk "+carts.getNameItem()+" pada keranjang belanja No. "+carts.getCartId()+" dengan harga "+format.format(Integer.valueOf(carts.getPriceItem()))+" belum dilakukan pembayaran.");
+        }else{
+            holder.imgNotif.setImageResource(R.drawable.ic_success);
+            holder.txtNotif.setText("Produk "+carts.getNameItem()+" pada keranjang belanja No. "+carts.getCartId()+" dengan harga "+format.format(Integer.valueOf(carts.getPriceItem()))+" telah pembayaran.");
+        }
 
     }
 
@@ -72,12 +75,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
-        TextView txtHistory, tglHistory;
+        TextView txtNotif, tglNotif;
+        ImageView imgNotif;
         public MyViewHolder(@NonNull View itemView){
             super(itemView);
 
-            txtHistory = itemView.findViewById(R.id.tv_item_name_history);
-            tglHistory = itemView.findViewById(R.id.tv_item_description_tgl);
+            txtNotif = itemView.findViewById(R.id.tv_item_name_notif);
+            tglNotif = itemView.findViewById(R.id.tv_item_description_tgl_notif);
+            imgNotif = itemView.findViewById(R.id.img_item_photo_notif);
+
         }
 
     }

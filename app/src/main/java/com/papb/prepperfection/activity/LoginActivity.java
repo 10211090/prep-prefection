@@ -144,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                     }
                                     else {
-                                        firebaseDatabase.getReference().child("Orders").child(user.getUid()).setValue(null);
+                                        firebaseDatabase.getReference().child("Orders").child(String.valueOf(user.getUid())).setValue(null);
                                     }
                                 }
 
@@ -153,7 +153,6 @@ public class LoginActivity extends AppCompatActivity {
 
                                 }
                             });
-
 
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString(KEY_ID, user.getUid().toString());

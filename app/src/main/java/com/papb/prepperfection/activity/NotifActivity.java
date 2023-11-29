@@ -2,6 +2,8 @@ package com.papb.prepperfection.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -35,7 +37,14 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.papb.prepperfection.MainActivity;
 import com.papb.prepperfection.R;
+import com.papb.prepperfection.adapter.HistoryAdapter;
+import com.papb.prepperfection.adapter.NotifAdapter;
+import com.papb.prepperfection.group.Carts;
+import com.papb.prepperfection.group.Historys;
+import com.papb.prepperfection.group.Products;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 public class NotifActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
 
@@ -47,6 +56,9 @@ public class NotifActivity extends AppCompatActivity implements PopupMenu.OnMenu
     FirebaseDatabase firebaseDatabase;
     DatabaseReference mDatabase;
     Integer intCartValue = 0;
+    RecyclerView recyclerView;
+    NotifAdapter notifAdapter;
+    ArrayList<Carts> list;
     private static final String SHARED_PREF_NAME = "mypref";
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
@@ -115,6 +127,8 @@ public class NotifActivity extends AppCompatActivity implements PopupMenu.OnMenu
 
             }
         });
+
+        setDataNotifAdapter();
 
         DashboardActivity = findViewById(R.id.homeIcoNotif);
         historyActivity = findViewById(R.id.historyIcoNotif);
@@ -241,6 +255,62 @@ public class NotifActivity extends AppCompatActivity implements PopupMenu.OnMenu
             });
         }
         return false;
+    }
+    public void setDataNotifAdapter(){
+        String userId = sharedPreferences.getString(KEY_ID,null);
+        recyclerView = findViewById(R.id.notifList);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        list = new ArrayList<>();
+        notifAdapter = new NotifAdapter(this,list);
+        recyclerView.setAdapter(notifAdapter);
+
+
+        mDatabase.child("/Carts/"+userId).addValueEventListener(new ValueEventListener() {
+            int tes = 1;
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int count = (int) snapshot.getChildrenCount();
+                    if (count > 0){
+                        for (int i=1; count >= i ;i++){
+
+                            mDatabase = FirebaseDatabase.getInstance().getReference().child("Carts").child(userId).child("CART00"+String.valueOf(i));
+                            Query query = mDatabase.orderByChild("userId").equalTo(userId);
+                            query.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    int count1 = (int) snapshot.getChildrenCount();
+//                                    for (int j=1; count1 >= j; j++){
+                                        for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                                            Carts carts = dataSnapshot.getValue(Carts.class);
+                                            list.add(carts);
+                                        }
+                                        notifAdapter.notifyDataSetChanged();
+                                    //}
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
+                        }
+                    }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
 }

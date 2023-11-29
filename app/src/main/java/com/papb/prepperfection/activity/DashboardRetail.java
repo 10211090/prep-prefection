@@ -604,6 +604,8 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (valueListener == true){
                             int count = (int) snapshot.getChildrenCount();
+
+
                             if (count > 0){
                                 mDatabase = FirebaseDatabase.getInstance().getReference("Carts").child(userId).child("CART00"+String.valueOf(count));
                                 Query query = mDatabase.orderByChild("statusItem").equalTo("Menunggu Pembayaran");
@@ -691,7 +693,7 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
                                     }
                                 });
 
-                            }if (valueListener == true){
+                            }if (count == 0 && valueListener == true){
                                 carts.setUserId(userId);
                                 carts.setCartId("CART001");
                                 carts.setProductId(products.getIdProduk());
