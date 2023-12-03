@@ -341,51 +341,7 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
         dialog.getWindow().setGravity(Gravity.BOTTOM);
 
     }
-//    public void showResepDialog() {
-//        final Dialog dialog = new Dialog(this);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.setContentView(R.layout.activity_resep);
-//        ImageView cancelButton = dialog.findViewById(R.id.cancelButton);
-//
-//        recyclerViewResep = findViewById(R.id.resepList);
-//        mDatabase = FirebaseDatabase.getInstance().getReference("Resep");
-////        recyclerViewResep.setHasFixedSize(true);
-////        recyclerViewResep.setLayoutManager(new LinearLayoutManager(this));
-//
-//        listResep = new ArrayList<>();
-//        resepAdapter = new ResepAdapter(this,listResep);
-//        recyclerViewResep.setAdapter(resepAdapter);
-////
-////        mDatabase.addValueEventListener(new ValueEventListener() {
-////            @Override
-////            public void onDataChange(@NonNull DataSnapshot snapshot) {
-////                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-////                    Reseps reseps = dataSnapshot.getValue(Reseps.class);
-////                    listResep.add(reseps);
-////
-////                }
-////                resepAdapter.notifyDataSetChanged();
-////            }
-////
-////            @Override
-////            public void onCancelled(@NonNull DatabaseError error) {
-////
-////            }
-////        });
-//
-//        cancelButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                dialog.dismiss();
-//            }
-//        });
-//
-//        dialog.show();
-//        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-//        dialog.getWindow().setGravity(Gravity.BOTTOM);
-//    }
+
     private void showPromoDialog() {
 
         final Dialog dialog = new Dialog(this);
@@ -521,7 +477,7 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
     public void setDataFruitAdapter(){
         recyclerView = findViewById(R.id.productList);
         mDatabase = FirebaseDatabase.getInstance().getReference("Products");
-        Query query = mDatabase.orderByChild("kategoriProduk").equalTo("Fruit");
+        Query query = mDatabase.orderByChild("kategoriProduk").equalTo("Instant");
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -606,8 +562,8 @@ public class DashboardRetail extends AppCompatActivity implements PopupMenu.OnMe
 
         if (products.getKategoriProduk().equals("Vegan") ){
             imgKategoriProduk.setImageResource(R.drawable.ic_vegan);
-        } else if (products.getKategoriProduk().equals("Fruit") ){
-            imgKategoriProduk.setImageResource(R.drawable.ic_fruit);
+        } else if (products.getKategoriProduk().equals("Instant") ){
+            imgKategoriProduk.setImageResource(R.drawable.ic_instant);
         } else {
             imgKategoriProduk.setImageResource(R.drawable.ic_spice);
         }

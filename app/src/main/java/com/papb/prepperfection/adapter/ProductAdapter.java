@@ -68,8 +68,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
 
         if (products.getKategoriProduk().equals("Vegan") ){
                holder.categoryProductImg.setImageResource(R.drawable.ic_vegan);
-        } else if (products.getKategoriProduk().equals("Fruit") ){
-            holder.categoryProductImg.setImageResource(R.drawable.ic_fruit);
+        } else if (products.getKategoriProduk().equals("Instant") ){
+            holder.categoryProductImg.setImageResource(R.drawable.ic_instant);
         } else {
             holder.categoryProductImg.setImageResource(R.drawable.ic_spice);
         }
